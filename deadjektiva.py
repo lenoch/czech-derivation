@@ -28,5 +28,6 @@ def stupnovani(lemma, atributy, vyznamy):
 
 def mladost(lemma, atributy, vyznamy):
     if atributy.get('d') == '1' and lemma.endswith('ý'):
-        atributy['k'] = '1'
+        del atributy['d']
+        atributy.update(k='1', g='F')  # genus, jmenný rod
         yield lemma[:-1] + 'ost', atributy, vyznamy
