@@ -5,13 +5,12 @@ from deadjektiva import deadjektiva
 
 
 def derivace(lemma, atributy, vyznamy=set()):
-    slovni_druh = atributy.get('k')
+    slovni_druh = atributy.get('k')  # kind, slovní druh, part of speech (POS)
     if slovni_druh is None:
         raise ValueError('Nezadaný slovní druh pro ' + str(lemma))
 
     if slovni_druh == '2':
-        for vysledek in deadjektiva(lemma, atributy, vyznamy):
-            yield vysledek
+        return deadjektiva(lemma, atributy, vyznamy)
     else:
         logging.info('Nepodporovaný slovní druh: %s (%s)', slovni_druh, lemma)
 

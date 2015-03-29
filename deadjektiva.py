@@ -1,15 +1,18 @@
-import logging
+from itertools import chain
+# import logging
 
 from upravy import uprava_pravopisu
 
 
 def deadjektiva(lemma, atributy, vyznamy):
-    for vysledek in stupnovani(lemma, atributy, vyznamy):
-        yield vysledek
+    return chain(
+        stupnovani(lemma, dict(atributy), set(vyznamy)),
+        mladost(lemma, dict(atributy), set(vyznamy)),
+    )
 
 
 def stupnovani(lemma, atributy, vyznamy):
-    stupen = atributy.get('d')
+    stupen = atributy.get('d')  # degree, stupeň
     if stupen is None:
         raise ValueError('Nezadaný stupeň pro ' + str(lemma))
     elif stupen == '1':
@@ -22,3 +25,8 @@ def stupnovani(lemma, atributy, vyznamy):
     elif stupen == '2':
         atributy['d'] = '3'
         yield ('nej' + lemma, atributy, vyznamy)
+
+def mladost(lemma, atributy, vyznamy):
+    if atributy.get('d') == '1' and lemma.endswith('ý'):
+        atributy['k'] = '1'
+        yield lemma[:-1] + 'ost', atributy, vyznamy
