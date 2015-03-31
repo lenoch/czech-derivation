@@ -47,7 +47,7 @@ def adverbializace(lemma, atributy, vyznamy):
         
         for pravidla in zmeny:
             if lemma[len(lemma)-3:] in pravidla:
-                yield lemma[:len(lemma)-3] + pravidla[1], atributy, vyznamy
+                yield lemma[:-3] + pravidla[1], atributy, vyznamy
                 break  
             
                 #Breakuju kvůli pravidlům na "ký" a "hý", která se znovu aplikovala 
