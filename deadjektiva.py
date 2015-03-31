@@ -55,4 +55,4 @@ def adverbializace(lemma, atributy, vyznamy):
             
             else:
                 if lemma[len(lemma)-2:] in pravidla: 
-                    yield lemma[:len(lemma)-2] + pravidla[1], atributy, vyznamy    
+                    yield lemma[:-2] + pravidla[1], atributy, vyznamy    
