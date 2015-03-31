@@ -34,13 +34,20 @@ def mladost(lemma, atributy, vyznamy):
         
 def adverbializace(lemma, atributy, vyznamy):
     zmeny=[('dý','dě'),('rý','ře'),('bý','bě'),('vý','vě'),('mý','mě'),('sý','se'),('pý','pě'),('tý','tě'),('lý','le'),('ný','ně'),('ní','ně'),('chý','še'),('hý','ze'),('ský','sky'),('cký','cky'),('ký','ce')]    
-    if atributy.get('k') == '2' and atributy.get('d') ==  '1':
-        if lemma.endswith('á') or lemma.endswith('é'): lemma = lemma[:-1] + 'ý'   #Prozatím primitivní koverze na maskulina, nepočítá s krátkými tvary (mlád, zdráva...)
+    if atributy.get('d') ==  '1':
         atributy['k'] = '6'     
         yield lemma[:-1] + 'o', atributy, vyznamy
-        for pravidla in zmeny:   #Kvůli ský/cký/chý používám dva cykly. první na rozeznávání posledních tří znaků, druhý na poslední dva znaky
+        
+        #Kvůli ský/cký/chý používám dva cykly. 
+        #První na rozeznávání posledních tří znaků, druhý na poslední dva znaky
+        
+        for pravidla in zmeny:
             if lemma[len(lemma)-3:] in pravidla:
                 yield lemma[:len(lemma)-3] + pravidla[1], atributy, vyznamy
-                break   #Breakuju kvůli pravidlům na "ký" a "hý", která se znovu aplikovala i pro na už jednou zpracovaná "cký/ský" popř. "chý"
+                break  
+            
+                #Breakuju kvůli pravidlům na "ký" a "hý", která se znovu aplikovala 
+                #i pro na už jednou zpracovaná "cký/ský" popř. "chý"
+            
             else:
                 if lemma[len(lemma)-2:] in pravidla: yield lemma[:len(lemma)-2] + pravidla[1], atributy, vyznamy    
