@@ -59,10 +59,6 @@ def adverbializace(lemma, atributy, vyznamy):
         atributy['k'] = '6'
         yield lemma[:-1] + 'o', atributy, vyznamy
 
-        # Kvůli ský/cký/chý používám dva cykly.
-        # První na rozeznávání posledních tří znaků, druhý na poslední dva znaky
-        # Do pravidla se v kazdem cyklu ulozi nektera z dvojic ve zmenach
-
         for adjektivni, adverbialni in zakonceni:
             if lemma.endswith(adjektivni):
                 delka_zakonceni = len(adjektivni)
