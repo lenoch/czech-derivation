@@ -63,7 +63,4 @@ def adverbializace(lemma, atributy, vyznamy):
             if lemma.endswith(adjektivni):
                 delka_zakonceni = len(adjektivni)
                 yield lemma[:-delka_zakonceni] + adverbialni, atributy, vyznamy
-
-                # Breakuju kvůli pravidlům na "ký" a "hý", která se znovu aplikovala
-                # i pro na už jednou zpracovaná "cký/ský" popř. "chý"
-                break
+                break  # po skupinách ck, sk a spřežce ch už neděláme k a h
