@@ -1,47 +1,51 @@
 from itertools import chain
 # import logging
 
+import adverbium
+import slovni_tvar
+import substantivum
 from upravy import palatalizace
 
 
-def deadjektiva(lemma, atributy, vyznamy):
-    return chain(
-        stupnovani(lemma, dict(atributy), set(vyznamy)),
-        mladost(lemma, dict(atributy), set(vyznamy)),
-        adverbializace(lemma, dict(atributy), set(vyznamy)),
-    )
+class Adjektivum(slovni_tvar.SlovniTvar):
+    def __init__(self, rodic=None, lemma='', atributy={}, vyznamy={}):
+        super().__init__(rodic, lemma, atributy, vyznamy)
 
+        self.atributy['k'] = '2'
+        self.stupen = self.atributy.get('d')  # degree, stupeň
 
-def stupnovani(lemma, atributy, vyznamy):
-    stupen = atributy.get('d')  # degree, stupeň
-    if stupen is None:
-        raise ValueError('Nezadaný stupeň pro ' + str(lemma))
-    elif stupen == '1':
-        if lemma.endswith('ý'):
-            komparativ = palatalizace(lemma[:-1] + 'ější')
-            atributy['d'] = '2'
-            yield (komparativ, atributy, vyznamy)
-            for vysledek in stupnovani(komparativ, atributy, vyznamy):
-                yield vysledek
-    elif stupen == '2':
-        atributy['d'] = '3'
-        yield ('nej' + lemma, atributy, vyznamy)
+    def odvozeniny(self):
+        return chain(
+            self.stupnovani(),
+            self.mladost(),
+            self.adverbializace(),
+        )
 
+    def stupnovani(self):
+        if self.stupen == '1':
+            if self.lemma.endswith('ý'):
+                komparativ = Adjektivum(
+                    self, palatalizace(self.lemma[:-1] + 'ější'), dict(d='2'))
+                yield komparativ
 
-def mladost(lemma, atributy, vyznamy):
-    if atributy.get('d') == '1' and lemma.endswith('ý'):
-        del atributy['d']
-        atributy.update(k='1', g='F')  # genus, jmenný rod
-        yield lemma[:-1] + 'ost', atributy, vyznamy
+                # TODO: patří to sem?
+                for superlativ in komparativ.stupnovani():
+                    yield superlativ
+        elif self.stupen == '2':
+            yield Adjektivum(self, 'nej' + self.lemma, dict(d='2'))
 
+    def mladost(self):
+        if self.stupen == '1' and self.lemma.endswith('ý'):
+            # derivát je femininum (g = genus, jmenný rod)
+            yield substantivum.Substantivum(
+                self, self.lemma[:-1] + 'ost', dict(g='F'))
 
-def adverbializace(lemma, atributy, vyznamy):
-    if atributy.get('d') == '1':
-        atributy['k'] = '6'
-        yield lemma[:-1] + 'o', atributy, vyznamy
+    def adverbializace(self):
+        if self.stupen == '1':
+            yield adverbium.Adverbium(self, self.lemma[:-1] + 'o')
 
-        if lemma[-3:] in ('cký', 'ský'):
-            yield lemma[:-1] + 'y', atributy, vyznamy
-        elif lemma[-1] in ('í', 'ý'):
-            kmen = lemma[:-1]
-            yield palatalizace(kmen + 'ě'), atributy, vyznamy
+            if self.lemma[-3:] in ('cký', 'ský'):
+                yield adverbium.Adverbium(self, self.lemma[:-1] + 'y')
+            elif self.lemma[-1] in ('í', 'ý'):
+                kmen = self.lemma[:-1]
+                yield adverbium.Adverbium(self, palatalizace(kmen + 'ě'))

@@ -1,18 +1,28 @@
 import logging
 
-# from desubstantiva import desubstantiva
-from adjektivum import deadjektiva
+from adjektivum import Adjektivum
+from adverbium import Adverbium
+from substantivum import Substantivum
 
 
-def derivace(lemma, atributy, vyznamy=set()):
+def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
     slovni_druh = atributy.get('k')  # kind, slovní druh, part of speech (POS)
     if slovni_druh is None:
         raise ValueError('Nezadaný slovní druh pro ' + str(lemma))
-
-    if slovni_druh == '2':
-        return deadjektiva(lemma, atributy, vyznamy)
+    elif slovni_druh == '1':
+        return Substantivum(None, lemma, atributy, vyznamy)
+    elif slovni_druh == '2':
+        return Adjektivum(None, lemma, atributy, vyznamy)
+    elif slovni_druh == '4':
+        # přidat význam +NUM, ale při derivaci postupovat podle deklinace:
+        # čtvrtý → čtvrťák („deadjektivum“)
+        # pět → páťák („desubstantivum“)
+        raise ValueError('Číslovky zatím neumíme rozlišit')
+    elif slovni_druh == '6':
+        return Adverbium(None, lemma, atributy, vyznamy)
     else:
-        logging.info('Nepodporovaný slovní druh: %s (%s)', slovni_druh, lemma)
+        raise ValueError('Nepodporovaný slovní druh: %s (%s)' % (
+            slovni_druh, lemma))
 
 
 def test():
@@ -23,18 +33,16 @@ def test():
     ]
 
     for lemma, atributy in pokusy:
-        print(lemma, zformatovat_atributy(atributy))
+        try:
+            slovo = vytvorit_slovni_tvar(lemma, atributy)
+        except ValueError as ve:
+            logging.exception(ve)
 
-        for derivat, atributy_derivatu, vyznamy_derivatu in derivace(
-                lemma, atributy):
-            print(derivat, zformatovat_atributy(atributy_derivatu),
-                  ' '.join(vyznamy_derivatu))
+        print(slovo.lemma, slovo.zformatovat_atributy())
+        for odvozenina in slovo.odvozeniny():
+            print(odvozenina.lemma, odvozenina.zformatovat_atributy(),
+                  ' '.join(odvozenina.vyznamy))
         print('\n')
-
-
-def zformatovat_atributy(atributy):
-    return ' '.join(atribut + '=' + hodnota for atribut, hodnota
-                    in sorted(atributy.items()))
 
 
 if __name__ == '__main__':
