@@ -36,31 +36,12 @@ def mladost(lemma, atributy, vyznamy):
 
 
 def adverbializace(lemma, atributy, vyznamy):
-    zakonceni = [  # dají se zkrátit díky „pravopisným“ úpravám
-        ('dý', 'dě'),
-        ('rý', 'ře'),  # rě → ře (už máme)
-        ('bý', 'bě'),
-        ('vý', 'vě'),
-        ('mý', 'mě'),
-        ('sý', 'se'),  # sě → se (čeština už nemá měkké ś)
-        ('pý', 'pě'),
-        ('tý', 'tě'),
-        ('lý', 'le'),  # lě → le (ani měkké ľ)
-        ('ný', 'ně'),
-        ('ní', 'ně'),
-        ('chý', 'še'),  # chě → še (historická palatalizace)
-        ('hý', 'ze'),  # hě → ze (podobně)
-        ('ský', 'sky'),
-        ('cký', 'cky'),
-        ('ký', 'ce'),  # kě → ce (a taky)
-    ]
-
     if atributy.get('d') == '1':
         atributy['k'] = '6'
         yield lemma[:-1] + 'o', atributy, vyznamy
 
-        for adjektivni, adverbialni in zakonceni:
-            if lemma.endswith(adjektivni):
-                delka_zakonceni = len(adjektivni)
-                yield lemma[:-delka_zakonceni] + adverbialni, atributy, vyznamy
-                break  # po skupinách ck, sk a spřežce ch už neděláme k a h
+        if lemma[-3:] in ('cký', 'ský'):
+            yield lemma[:-1] + 'y', atributy, vyznamy
+        elif lemma[-1] in ('í', 'ý'):
+            kmen = lemma[:-1]
+            yield uprava_pravopisu(kmen + 'ě'), atributy, vyznamy
