@@ -17,7 +17,7 @@ PALATALIZOVANE = OrderedDict((
 PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZOVANE))
 
 
-def uprava_pravopisu(slovo):
+def palatalizace(slovo):
     while True:
         slovo, zmeneno = PALATALIZOVAT.subn(
             lambda nalez: PALATALIZOVANE[nalez.group()], slovo)

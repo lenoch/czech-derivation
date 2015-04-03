@@ -1,7 +1,7 @@
 from itertools import chain
 # import logging
 
-from upravy import uprava_pravopisu
+from upravy import palatalizace
 
 
 def deadjektiva(lemma, atributy, vyznamy):
@@ -18,7 +18,7 @@ def stupnovani(lemma, atributy, vyznamy):
         raise ValueError('Nezadaný stupeň pro ' + str(lemma))
     elif stupen == '1':
         if lemma.endswith('ý'):
-            komparativ = uprava_pravopisu(lemma[:-1] + 'ější')
+            komparativ = palatalizace(lemma[:-1] + 'ější')
             atributy['d'] = '2'
             yield (komparativ, atributy, vyznamy)
             for vysledek in stupnovani(komparativ, atributy, vyznamy):
@@ -44,4 +44,4 @@ def adverbializace(lemma, atributy, vyznamy):
             yield lemma[:-1] + 'y', atributy, vyznamy
         elif lemma[-1] in ('í', 'ý'):
             kmen = lemma[:-1]
-            yield uprava_pravopisu(kmen + 'ě'), atributy, vyznamy
+            yield palatalizace(kmen + 'ě'), atributy, vyznamy
