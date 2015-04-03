@@ -1,7 +1,7 @@
 import logging
 
 # from desubstantiva import desubstantiva
-from deadjektiva import deadjektiva
+from adjektivum import deadjektiva
 
 
 def derivace(lemma, atributy, vyznamy=set()):
