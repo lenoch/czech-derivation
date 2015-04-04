@@ -10,15 +10,11 @@ def kraceni(vokala):
     !!! jedná se o kostru k rozšíření !!!
     Funkce: vstupem je řetězec - vokála a pokud je validní, výstupem je její krátká varianta
     """
-    if vokala == "á":
-        vokala = "a"
-    elif vokala == "ů":
-        vokala = "o"
-    elif vokala == "ou":
-        vokala = "u"
-    elif vokala == "é":
-        vokala == "e"
-    return vokala
+    dlouhe = {'á':'a', 'é':'e', 'í':'i', 'ý':'y', 'ou':'u', 'ú':'u', 'ů':'o'}
+    if vokala in dlouhe:
+        return dlouhe[vokala]
+    else:
+        return vokala
 
 def dlouzeni(vokala):
     """
@@ -36,7 +32,7 @@ def dlouzeni(vokala):
         vokala == "é"
     return vokala
 
-def palatalizace1(k):
+def alternace1(k):
     """
     program zajišťuje změkčování vybraných konzonantů
     podle historického vývoje první palatalizace
@@ -44,7 +40,7 @@ def palatalizace1(k):
     """
     if k == 'k': # "k" změním na "č"
         k = 'č'
-    elif k == 'g': # "g" změním na "ž" (nemělo by k tomu docházet, g se vyvinulo ve spisovném jazyce na "h", ponechávám pro možnost program rozšířit)
+    elif k == 'z': # "z" změním na "ž"; původně bylo g na ž, ale tohle je častější
         k = 'ž'
     elif k == 'h': # "h" změním na "ž"
         k = 'ž'
@@ -54,7 +50,7 @@ def palatalizace1(k):
         k = 'ř'
     return k # vracím výsledek
 
-def palatalizace2(k):
+def alternace2(k):
     """
     program zajišťuje změkčování vybraných konzonantů
     podle historického vývoje
@@ -72,6 +68,7 @@ def palatalizace2(k):
     return n # vracím výsledek, pokud nebyl palatizovaný, je týž
 
 
+# tohle možno smazat, nebo přeřadit někam...
 def stupnovani(slovo, kat):
     """
     program slouží ke stupňování
