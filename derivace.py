@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import logging
 
 from adjektivum import Adjektivum
@@ -28,9 +30,26 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 def test():
     pokusy = [
         ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
+        ('drahý', dict(k='2', d='1'), {}, set(['dražší'])),
+        ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
+        ('hezký', dict(k='2', d='1'), {}, set(['hezčí'])),
+        ('hladký', dict(k='2', d='1'), {}, set(['hladší'])),
         ('horší', dict(k='2', d='2'), {}, set([])),
+        ('krátký', dict(k='2', d='1'), {}, set(['kratší'])),
+        ('mladý', dict(k='2', d='1'), {}, set(['mladší'])),
+        ('nový', dict(k='2', d='1'), {}, set(['novější'])),
         ('pěkný', dict(k='2', d='1'), {}, set(['pěkně'])),
+        ('plachý', dict(k='2', d='1'), {}, set(['plašší', 'plaše'])),
+        ('přímý', dict(k='2', d='1'), {}, set(['přímější'])),
+        ('smutný', dict(k='2', d='1'), {}, set(['smutnější'])),
         ('starý', dict(k='2', d='1'), {}, set(['starší'])),
+        ('špatný', dict(k='2', d='1'), {}, set(['špatnější'])),
+        ('tenký', dict(k='2', d='1'), {}, set(['tenčí'])),
+        ('úzký', dict(k='2', d='1'), {}, set(['užší'])),
+        ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
+        ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),
+        ('zlý', dict(k='2', d='1'), {}, set(['zlejší'])),
+        ('znamenitý', dict(k='2', d='1'), {}, set(['znamenitější'])),
     ]
 
     for lemma, atributy, vyznamy, ocekavane_odvozeniny in pokusy:

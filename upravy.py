@@ -8,6 +8,7 @@ import re
 # depalatalizací dokonce bez jakékoli stopy po ě.
 PALATALIZOVANE = OrderedDict((
     ('chě', 'še'),
+    ('chí', 'ší'),
     ('hě', 'ze'),
     ('kě', 'ce'),
     ('lě', 'le'),
