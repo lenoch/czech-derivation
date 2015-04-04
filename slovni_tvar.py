@@ -18,6 +18,25 @@ class SlovniTvar:
             self.atributy = atributy
             self.vyznamy = vyznamy
 
+    def __str__(self):
+        return '  '.join((self.lemma, self.zformatovat_atributy(),
+                         self.zformatovat_vyznamy()))
+
     def zformatovat_atributy(self):
-        return ' '.join(atribut + '=' + hodnota for atribut, hodnota
+        return ' '.join(atribut + '=' + str(hodnota) for atribut, hodnota
                         in sorted(self.atributy.items()))
+
+    def zformatovat_vyznamy(self):
+        return ' '.join(vyznam + '=' + hodnota if isinstance(hodnota, str) else
+                        '+' + vyznam if hodnota else '-' + vyznam for
+                        vyznam, hodnota in sorted(self.vyznamy.items()))
+
+    def vypsat_odvozeniny(self, max_hloubka_rekurze=0, hloubka_rekurze=0):
+        for odvozenina in self.odvozeniny():
+            print('  '*hloubka_rekurze, odvozenina, sep='  ')
+            if hloubka_rekurze <= max_hloubka_rekurze:
+                odvozenina.vypsat_odvozeniny(
+                    max_hloubka_rekurze=max_hloubka_rekurze,
+                    hloubka_rekurze=hloubka_rekurze + 1)
+
+    odvozeniny = [].__iter__

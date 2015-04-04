@@ -28,11 +28,11 @@ class Adjektivum(slovni_tvar.SlovniTvar):
                     self, palatalizace(self.lemma[:-1] + 'ější'), dict(d='2'))
                 yield komparativ
 
-                # TODO: patří to sem?
-                for superlativ in komparativ.stupnovani():
-                    yield superlativ
-        elif self.stupen == '2':
-            yield Adjektivum(self, 'nej' + self.lemma, dict(d='2'))
+                # superlativ se dá vygenerovat rekurzí
+                # for superlativ in komparativ.stupnovani():
+                #     yield superlativ
+        elif self.stupen == '2':  # asi nemá smysl vytvářet nejnejlepšejší
+            yield Adjektivum(self, 'nej' + self.lemma, dict(d='3'))
 
     def mladost(self):
         if self.stupen == '1' and self.lemma.endswith('ý'):

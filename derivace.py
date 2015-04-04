@@ -38,10 +38,8 @@ def test():
         except ValueError as ve:
             logging.exception(ve)
 
-        print(slovo.lemma, slovo.zformatovat_atributy())
-        for odvozenina in slovo.odvozeniny():
-            print(odvozenina.lemma, odvozenina.zformatovat_atributy(),
-                  ' '.join(odvozenina.vyznamy))
+        print(slovo)
+        slovo.vypsat_odvozeniny(max_hloubka_rekurze=5)
         print('\n')
 
 
