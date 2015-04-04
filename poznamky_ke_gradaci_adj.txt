@@ -1,0 +1,44 @@
+problém - zlý - horší/zlejší, špatný - špatný/špatnější
+problém - hebký - hebčí/hebčejší
+problém - zjistit jestli krácení neovliňuje kombinace souhlásek po dlouhé samohlásce (-tk-, -zk-) => korpusem
+problém - nefunguje tenký - tenčí
+
+vystup stupňování adjektiv:
+
+dobrý d=1 k=2
+lepší d=2 k=2 
+nejlepší d=3 k=2 
+
+
+pěkný d=1 k=2
+pěknější d=2 k=2 
+nejpěknější d=3 k=2 
+
+
+horší d=2 k=2
+nejhorší d=3 k=2 
+
+
+krátký d=1 k=2
+kratší d=2 k=2 
+nejkratší d=3 k=2 
+
+
+úzký d=1 k=2
+užší d=2 k=2 
+nejužší d=3 k=2 
+
+
+plachý d=1 k=2
+plašší d=2 k=2 
+nejplašší d=3 k=2 
+
+
+hladký d=1 k=2
+hladší d=2 k=2 
+nejhladší d=3 k=2 
+
+
+široký d=1 k=2
+širší d=2 k=2 
+nejširší d=3 k=2
