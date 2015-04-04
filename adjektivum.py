@@ -14,7 +14,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         self.atributy['k'] = '2'
         self.stupen = self.atributy.get('d')  # degree, stupeň
 
-    def odvozeniny(self):
+    def vytvorit_odvozeniny(self):
         return chain(
             self.stupnovani(),
             self.mladost(),

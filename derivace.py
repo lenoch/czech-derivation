@@ -27,18 +27,26 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 
 def test():
     pokusy = [
-        ('dobrý', dict(k='2', d='1')),  # starý → starší
-        ('pěkný', dict(k='2', d='1')),
-        ('horší', dict(k='2', d='2')),
+        ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
+        ('horší', dict(k='2', d='2'), {}, set([])),
+        ('pěkný', dict(k='2', d='1'), {}, set(['pěkně'])),
+        ('starý', dict(k='2', d='1'), {}, set(['starší'])),
     ]
 
-    for lemma, atributy in pokusy:
+    for lemma, atributy, vyznamy, ocekavane_odvozeniny in pokusy:
         try:
             slovo = vytvorit_slovni_tvar(lemma, atributy)
         except ValueError as ve:
             logging.exception(ve)
 
         print(slovo)
+
+        # (zatím?) se ověřují jen přímé derivace
+        odvozeniny = set(odvozenina.lemma for odvozenina in slovo.odvozeniny())
+        chybejici_odvozeniny = ocekavane_odvozeniny - odvozeniny
+        if chybejici_odvozeniny:
+            logging.error('chybí: %s', ', '.join(chybejici_odvozeniny))
+
         slovo.vypsat_odvozeniny(max_hloubka_rekurze=5)
         print('\n')
 

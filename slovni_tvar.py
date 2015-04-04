@@ -39,4 +39,11 @@ class SlovniTvar:
                     max_hloubka_rekurze=max_hloubka_rekurze,
                     hloubka_rekurze=hloubka_rekurze + 1)
 
-    odvozeniny = [].__iter__
+    vytvorit_odvozeniny = [].__iter__
+    _zapamatovane_odvozeniny = None
+
+    def odvozeniny(self):
+        if self._zapamatovane_odvozeniny is None:
+            self._zapamatovane_odvozeniny = list(self.vytvorit_odvozeniny())
+        for odvozenina in self._zapamatovane_odvozeniny:
+            yield odvozenina
