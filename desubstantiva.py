@@ -45,3 +45,36 @@ def sub_cirkumfixace(lemma,atributy,vyznamy):
     for prefix in prefixy:
         yield prefix + lemma + 'í', atributy, vyznamy
 
+def sub_prefixace(lemma,atributy,vyznamy):
+    """
+    Vytváření substantivních derivátů pomocí množiny prefixů
+    Vycházím ze záznamu na Wikipedii - "Seznam českých předpon"
+    Vybral jsem předpony, kterými lze teoreticky modifikovat příslušná substantiva
+    """
+    
+    prefixy=['polo','pra','pa','skoro','sotva','mezi','ne','pseudo','super', \
+             'maxi', 'mini','giga','ultra','ex','hyper','neo','retro']
+
+    for prefix in prefixy:
+        yield prefix + lemma, atributy, vyznamy
+
+def sub_konatelska(lemma,atributy,vyznamy):
+    """
+    Vytváření konatelských substantiv
+    V případě zakončení na vokál jej odseknu
+    K alternacím s výjimkou c -> č nedochází
+    Nakonec připojím jeden z množiny konatelských sufixů
+    Zřídka funkce utvoří více než jedno v praxi používané slovo
+    Tzn. vysoká míra nadgenerování
+    """
+    
+    vokaly=['a','á','e','é','i','í','o','ó','u','ú','y','ý','ě']
+    sufixy=['ař','ář','ista','ník']
+    
+    if lemma[-1:] in vokaly:
+        lemma=lemma[:-1]
+
+    if lemma[-1:]=='c': lemma=lemma[:-1] + 'č'
+
+    for sufix in sufixy:
+        yield lemma + sufix, atributy, vyznamy
