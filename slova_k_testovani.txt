@@ -12,5 +12,4 @@ Prefixace substantiv:
 hrad, stroj, muž, hvězda, město, letadlo, strom
 
 Substantiva konatelská:
-traktor, hora, pádlo, houba, četa, závod, kolo, škola, hranice, silnice
-
+v testech

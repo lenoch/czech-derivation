@@ -50,7 +50,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         aby to fungovalo, nezbylo mi nic jiné než udělat výjimku.
         """
 
-        if self.vyznamy.get('subst_cirkumfix'):
+        if self.vyznamy.keys() & frozenset(('subst_cirkumfix', 'subst_prefix',
+                                            'konatel')):
             return
 
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
@@ -76,7 +77,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         Vybral jsem předpony, kterými lze teoreticky modifikovat příslušná substantiva
         """
 
-        if self.vyznamy.get('subst_prefix'):
+        if self.vyznamy.keys() & frozenset(('subst_cirkumfix',
+                                            'subst_prefix')):
             return
 
         prefixy = ['polo', 'pra', 'pa', 'skoro', 'sotva', 'mezi', 'ne',
@@ -97,7 +99,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         Tzn. vysoká míra nadgenerování
         """
 
-        if self.vyznamy.get('konatel'):
+        if self.vyznamy.keys() & frozenset(('subst_cirkumfix', 'subst_prefix',
+                                            'konatel')):
             return
 
         sufixy = ['ař', 'ář', 'ista', 'ník']

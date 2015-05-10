@@ -28,6 +28,16 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 
 def test():
     pokusy = [
+        ('četa', dict(k='1'), {}, set(['četař', 'četník'])),
+        ('hora', dict(k='1'), {}, set(['horník'])),
+        ('houba', dict(k='1'), {}, set(['houbař'])),
+        ('hranice', dict(k='1'), {}, set(['hraničář'])),
+        ('kolo', dict(k='1'), {}, set(['kolař'])),
+        ('pádlo', dict(k='1'), {}, set(['pádlař'])),
+        ('traktor', dict(k='1'), {}, set(['traktorista'])),
+        ('silnice', dict(k='1'), {}, set(['silničář'])),
+        ('škola', dict(k='1'), {}, set(['školník'])),
+        ('závod', dict(k='1'), {}, set(['závodník'])),
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
         ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
         ('český', dict(k='2', d='1'), {}, set(['česky'])),
