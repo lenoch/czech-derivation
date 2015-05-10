@@ -33,7 +33,7 @@ class SlovniTvar:
 
     def vypsat_odvozeniny(self, max_hloubka_rekurze=0, hloubka_rekurze=0):
         for odvozenina in self.odvozeniny():
-            print('  '*hloubka_rekurze, odvozenina, sep='  ')
+            print('  '*hloubka_rekurze, odvozenina, sep='  ', flush=True)
             if hloubka_rekurze <= max_hloubka_rekurze:
                 odvozenina.vypsat_odvozeniny(
                     max_hloubka_rekurze=max_hloubka_rekurze,
@@ -47,3 +47,11 @@ class SlovniTvar:
             self._zapamatovane_odvozeniny = list(self.vytvorit_odvozeniny())
         for odvozenina in self._zapamatovane_odvozeniny:
             yield odvozenina
+
+    def lemmata(self, max_hloubka_rekurze=0, hloubka_rekurze=0):
+        for odvozenina in self.odvozeniny():
+            yield odvozenina.lemma
+            if hloubka_rekurze <= max_hloubka_rekurze:
+                for lemma in odvozenina.lemmata(max_hloubka_rekurze,
+                                                hloubka_rekurze + 1):
+                    yield lemma

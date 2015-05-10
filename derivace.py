@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import logging
 
 from adjektivum import Adjektivum
@@ -29,28 +28,47 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 
 def test():
     pokusy = [
+        ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
+        ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
+        ('český', dict(k='2', d='1'), {}, set(['česky'])),
         ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
-        ('drahý', dict(k='2', d='1'), {}, set(['dražší'])),
+        ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž'])),
+        ('důvodný', dict(k='2', d='1'), {}, set(['bezdůvodně'])),
         ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
         ('hezký', dict(k='2', d='1'), {}, set(['hezčí'])),
-        ('hladký', dict(k='2', d='1'), {}, set(['hladší'])),
+        ('hladký', dict(k='2', d='1'), {}, set(['hladší', 'hladce'])),
+        ('hloupý', dict(k='2', d='1'), {}, set(['hloupě'])),
+        ('hluchý', dict(k='2', d='1'), {}, set(['hluše'])),
         ('horší', dict(k='2', d='2'), {}, set([])),
+        ('chrabrý', dict(k='2', d='1'), {}, set(['chrabře'])),
+        ('komorní', dict(k='2', d='1'), {}, set(['komornější', 'komorně'])),
         ('krátký', dict(k='2', d='1'), {}, set(['kratší'])),
+        ('mělký', dict(k='2', d='1'), {}, set(['mělčí', 'mělce'])),
         ('mladý', dict(k='2', d='1'), {}, set(['mladší'])),
+        ('mrtvý', dict(k='2', d='1'), {}, set(['mrtvě', 'domrtva'])),
+        ('nahý', dict(k='2', d='1'), {}, set(['donaha'])),
         ('nový', dict(k='2', d='1'), {}, set(['novější'])),
+        ('olomoucký', dict(k='2', d='1'), {}, set(['olomoucky'])),
+        ('ostravský', dict(k='2', d='1'), {}, set(['ostravsky'])),
         ('pěkný', dict(k='2', d='1'), {}, set(['pěkně'])),
         ('plachý', dict(k='2', d='1'), {}, set(['plašší', 'plaše'])),
+        ('povědomý', dict(k='2', d='1'), {}, set(['povědomě'])),
+        ('prostý', dict(k='2', d='1'), {}, set(['prostě'])),
         ('přímý', dict(k='2', d='1'), {}, set(['přímější'])),
+        ('skoupý', dict(k='2', d='1'), {}, set(['skoupější', 'skoupě'])),
         ('smutný', dict(k='2', d='1'), {}, set(['smutnější'])),
-        ('starý', dict(k='2', d='1'), {}, set(['starší'])),
+        ('stálý', dict(k='2', d='1'), {}, set(['stálejší', 'stále'])),
+        ('starý', dict(k='2', d='1'), {}, set(['starší', 'staře'])),
         ('špatný', dict(k='2', d='1'), {}, set(['špatnější'])),  # chceme?
         ('tenký', dict(k='2', d='1'), {}, set(['tenčí'])),
+        ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě'])),
+        ('uplakaný', dict(k='2', d='1'), {}, set(['uplakanější', 'uplakaně'])),
         ('úzký', dict(k='2', d='1'), {}, set(['užší'])),
         ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
+        ('vodní', dict(k='2', d='1'), {}, set([])),
         ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),
         ('zlý', dict(k='2', d='1'), {}, set(['zlejší'])),
         ('znamenitý', dict(k='2', d='1'), {}, set(['znamenitější'])),
-        # TODO: draze/draho: dráž
     ]
 
     for lemma, atributy, vyznamy, ocekavane_odvozeniny in pokusy:
@@ -59,16 +77,15 @@ def test():
         except ValueError as ve:
             logging.exception(ve)
 
-        print(slovo)
+        print(slovo, flush=True)
+        slovo.vypsat_odvozeniny(max_hloubka_rekurze=5)
 
-        # (zatím?) se ověřují jen přímé derivace
-        odvozeniny = set(odvozenina.lemma for odvozenina in slovo.odvozeniny())
+        odvozeniny = set(slovo.lemmata(max_hloubka_rekurze=5))
         chybejici_odvozeniny = ocekavane_odvozeniny - odvozeniny
         if chybejici_odvozeniny:
             logging.error('chybí: %s', ', '.join(chybejici_odvozeniny))
 
-        slovo.vypsat_odvozeniny(max_hloubka_rekurze=5)
-        print('\n')
+        print('\n', flush=True)
 
 
 if __name__ == '__main__':
