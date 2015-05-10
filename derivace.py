@@ -43,13 +43,14 @@ def test():
         ('přímý', dict(k='2', d='1'), {}, set(['přímější'])),
         ('smutný', dict(k='2', d='1'), {}, set(['smutnější'])),
         ('starý', dict(k='2', d='1'), {}, set(['starší'])),
-        ('špatný', dict(k='2', d='1'), {}, set(['špatnější'])),
+        ('špatný', dict(k='2', d='1'), {}, set(['špatnější'])),  # chceme?
         ('tenký', dict(k='2', d='1'), {}, set(['tenčí'])),
         ('úzký', dict(k='2', d='1'), {}, set(['užší'])),
         ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
         ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),
         ('zlý', dict(k='2', d='1'), {}, set(['zlejší'])),
         ('znamenitý', dict(k='2', d='1'), {}, set(['znamenitější'])),
+        # TODO: draze/draho: dráž
     ]
 
     for lemma, atributy, vyznamy, ocekavane_odvozeniny in pokusy:
