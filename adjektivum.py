@@ -71,6 +71,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         elif self.stupen == '2':  # asi nemá smysl vytvářet nejnejlepšejší
             yield Adjektivum(self, 'nej' + self.lemma, dict(d='3'))
 
+    # TODO: dobrota, dobrotivý
     def mladost(self):
         if self.stupen == '1' and self.lemma.endswith('ý'):
             # derivát je femininum (g = genus, jmenný rod)
