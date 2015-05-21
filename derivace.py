@@ -4,6 +4,7 @@ import logging
 from adjektivum import Adjektivum
 from adverbium import Adverbium
 from substantivum import Substantivum
+from verbum import Verbum
 
 
 def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
@@ -19,6 +20,8 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
         # čtvrtý → čtvrťák („deadjektivum“)
         # pět → páťák („desubstantivum“)
         raise ValueError('Číslovky zatím neumíme rozlišit')
+    elif slovni_druh == '5':
+        return Verbum(None, lemma, atributy, vyznamy)
     elif slovni_druh == '6':
         return Adverbium(None, lemma, atributy, vyznamy)
     else:
@@ -72,7 +75,10 @@ def test():
         ('špatný', dict(k='2', d='1'), {}, set(['špatnější'])),  # chceme?
         ('tenký', dict(k='2', d='1'), {}, set(['tenčí'])),
         ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě'])),
-        ('uplakaný', dict(k='2', d='1'), {}, set(['uplakanější', 'uplakaně'])),
+        # pláč → plakat → uplakat → uplakaný
+        ('plakat', dict(k='5', e='A', a='I'), {}, set([
+            'neplakat', 'doplakat', 'oplakat', 'splakat', 'uplakat',
+            'vyplakat', 'zaplakat', 'uplakaný', 'uplakanější', 'uplakaně'])),
         ('úzký', dict(k='2', d='1'), {}, set(['užší'])),
         ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
         ('vodní', dict(k='2', d='1'), {}, set([])),
