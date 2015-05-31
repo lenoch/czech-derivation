@@ -13,13 +13,16 @@ PALATALIZACE = OrderedDict((
     ('zš', 'žš'),
 
     # palatalizace vlivem měkčícího e/i
+    ('cí', 'čí'),  # hranice → příhraničí
     ('chě', 'še'),
-    ('chí', 'ší'),
+    ('chí', 'ší'),  # střecha → přístřeší
     ('hě', 'ze'),
+    ('hí', 'ží'),  # břeh → pobřeží
     ('kě', 'ce'),
-    ('kí', 'čí'),
+    ('kí', 'čí'),  # bok → úbočí
     ('lě', 'le'),
     ('rě', 'ře'),
+    ('rí', 'ří'),  # hora → pohoří
     ('sě', 'se'),
 ))
 PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))
