@@ -15,8 +15,8 @@ class SlovniTvar:
             self.vyznamy.update(vyznamy)
         else:
             self.lemma = lemma
-            self.atributy = atributy
-            self.vyznamy = vyznamy
+            self.atributy = dict(atributy)
+            self.vyznamy = dict(vyznamy)
 
     def __str__(self):
         return '  '.join((self.lemma, self.zformatovat_atributy(),
@@ -44,7 +44,8 @@ class SlovniTvar:
 
     def odvozeniny(self):
         if self._zapamatovane_odvozeniny is None:
-            self._zapamatovane_odvozeniny = list(self.vytvorit_odvozeniny())
+            self._zapamatovane_odvozeniny = list(
+                self.vytvorit_odvozeniny() or [])
         for odvozenina in self._zapamatovane_odvozeniny:
             yield odvozenina
 
@@ -61,5 +62,4 @@ class SlovniTvar:
         setattr(cls, proces, cls.prazdny_proces)
 
     def prazdny_proces(self):
-        if False:
-            yield self
+        return []

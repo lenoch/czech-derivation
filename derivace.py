@@ -33,7 +33,7 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 def test():
     pokusy = [
         ('četa', dict(k='1'), {}, set(['četař', 'četník'])),
-        ('hora', dict(k='1'), {}, set(['horník'])),
+        ('hora', dict(k='1'), {}, set(['horník', 'pohoří'])),
         ('houba', dict(k='1'), {}, set(['houbař'])),
         # hrana?
         ('hranice', dict(k='1'), {}, set(['hraničář'])),
@@ -44,9 +44,10 @@ def test():
         ('silnice', dict(k='1'), {}, set(['silničář'])),
         ('škola', dict(k='1'), {}, set(['školník'])),
         ('závod', dict(k='1'), {}, set(['závodník'])),
+        ('autorův', dict(k='2'), {}, set()),
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
         ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
-        ('český', dict(k='2', d='1'), {}, set(['česky'])),
+        ('český', dict(k='2', d='1'), {}, set(['česky', 'češtější'])),
         ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
         ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž'])),
         # důvod → důvodný
@@ -54,10 +55,9 @@ def test():
         ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
         ('hezký', dict(k='2', d='1'), {}, set(['hezčí'])),
         ('hladký', dict(k='2', d='1'), {}, set(['hladší', 'hladce'])),
-        ('hloupý', dict(k='2', d='1'), {}, set(['hloupě'])),
-        ('hluchý', dict(k='2', d='1'), {}, set(['hluše'])),
-        ('horší', dict(k='2', d='2'), {}, set([])),
-        ('chrabrý', dict(k='2', d='1'), {}, set(['chrabře'])),
+        ('hloupý', dict(k='2', d='1'), {}, set(['hloupě', 'hloupější'])),
+        ('hluchý', dict(k='2', d='1'), {}, set(['hluše', 'hlušší'])),
+        ('chrabrý', dict(k='2', d='1'), {}, set(['chrabře', 'chrabřejší'])),
         ('komorní', dict(k='2', d='1'), {}, set(['komornější', 'komorně'])),
         ('krátký', dict(k='2', d='1'), {}, set(['kratší'])),
         ('mělký', dict(k='2', d='1'), {}, set(['mělčí', 'mělce'])),
@@ -69,16 +69,17 @@ def test():
         ('ostravský', dict(k='2', d='1'), {}, set(['ostravsky'])),
         ('pěkný', dict(k='2', d='1'), {}, set(['pěkně'])),
         ('plachý', dict(k='2', d='1'), {}, set(['plašší', 'plaše'])),
-        ('povědomý', dict(k='2', d='1'), {}, set(['povědomě'])),
-        ('prostý', dict(k='2', d='1'), {}, set(['prostě'])),
+        ('povědomý', dict(k='2', d='1'), {}, set(['povědomě', 'povědomější'])),
+        ('prostý', dict(k='2', d='1'), {}, set(['prostě', 'prostější',
+                                                'prostší'])),
         ('přímý', dict(k='2', d='1'), {}, set(['přímější'])),
         ('skoupý', dict(k='2', d='1'), {}, set(['skoupější', 'skoupě'])),
         ('smutný', dict(k='2', d='1'), {}, set(['smutnější'])),
         ('stálý', dict(k='2', d='1'), {}, set(['stálejší', 'stále'])),
         ('starý', dict(k='2', d='1'), {}, set(['starší', 'staře'])),
-        ('špatný', dict(k='2', d='1'), {}, set(['špatnější'])),  # chceme?
+        ('špatný', dict(k='2', d='1'), {}, set(['horší', 'špatnější'])),
         ('tenký', dict(k='2', d='1'), {}, set(['tenčí'])),
-        ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě'])),
+        ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě', 'tvrdší'])),
         # pláč → plakat → uplakat → uplakaný
         ('plakat', dict(k='5', e='A', a='I'), {}, set([
             'neplakat', 'doplakat', 'oplakat', 'splakat', 'uplakat',
@@ -87,7 +88,7 @@ def test():
         ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
         ('vodní', dict(k='2', d='1'), {}, set([])),
         ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),
-        ('zlý', dict(k='2', d='1'), {}, set(['zlejší'])),
+        ('zlý', dict(k='2', d='1'), {}, set(['horší', 'zlejší'])),
         ('znamenitý', dict(k='2', d='1'), {}, set(['znamenitější'])),
     ]
 
