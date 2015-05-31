@@ -73,7 +73,8 @@ class Adjektivum(slovni_tvar.SlovniTvar):
             komparativ = self.kmen + 'ější'
         yield Adjektivum(self, palatalizace(komparativ), dict(d='2'))
 
-        if kmenova_finala == 'k':  # krátký > kratší, úzký > užší
+        if kmenova_finala == 'k' and len(self.kmen) >= 3:
+            # krátký > kratší, úzký > užší
             zkraceny = (self.kmen[:-3] + kraceni(self.kmen[-3]) +
                         self.kmen[-2] + 'ší')
             yield Adjektivum(self, palatalizace(zkraceny), dict(d='2'))

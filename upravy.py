@@ -24,6 +24,13 @@ PALATALIZACE = OrderedDict((
     ('rě', 'ře'),
     ('rí', 'ří'),  # hora → pohoří
     ('sě', 'se'),
+
+    # vynucená regresivní palatalizace? (vzduch+'ný → vzdušný)
+    ("c'", "č"),
+    ("h'", "ž"),
+    ("ch'", "š"),
+    ("k'", "č"),
+    ("'", ""),
 ))
 PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))
 

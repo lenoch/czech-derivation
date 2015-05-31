@@ -1,5 +1,6 @@
 from itertools import chain
 
+import adjektivum
 import slovni_tvar
 from upravy import palatalizace
 
@@ -11,8 +12,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         super().__init__(rodic, lemma, atributy, vyznamy)
 
         self.atributy['k'] = '1'
-        # u deadjektiv nechceme stupeň fundujícího slova (degree)
-        self.atributy.pop('d', None)
+        # u deadjektiv CHCEME stupeň fundujícího slova (degree), aby už se
+        # nederivovalo dál
         self.odtrhnout_koncovku()
 
     def odtrhnout_koncovku(self):
@@ -28,6 +29,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.konatelska(),
             self.cirkumfixace(),
             self.prefixace(),
+            self.adjektivum(),
         )
 
     def cirkumfixace(self):
@@ -58,9 +60,9 @@ class Substantivum(slovni_tvar.SlovniTvar):
          tag="k1.*"]
         """
 
-        if self.vyznamy.keys() & frozenset(('vlastnost', 'subst_cirkumfix',
-                                            'subst_prefix', 'konatel')):
-            return
+        if self.lemma[0].isupper() or self.vyznamy.keys() & frozenset((
+            'vlastnost', 'subst_cirkumfix', 'subst_prefix', 'konatel')):
+            return  # vlastní jména se taky neřeší
 
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
                    'ú', 'pří', 'roz', 'zá', 'za', 'pro', 'prů', 's', 'vý']
@@ -68,6 +70,9 @@ class Substantivum(slovni_tvar.SlovniTvar):
         for prefix in prefixy:
             yield Substantivum(self, palatalizace(prefix + self.kmen + 'í'),
                                vyznamy=dict(subst_cirkumfix=True))
+
+        # TODO: slova typu „bezdůvodný“ se podle mě tvoří připojením předložky
+        # bez důvodu → bez-důvod-n-ý
 
     def prefixace(self):
         """
@@ -102,7 +107,17 @@ class Substantivum(slovni_tvar.SlovniTvar):
                                             'subst_prefix', 'konatel')):
             return
 
-        sufixy = ['ař', 'ář', 'ista', 'ník']
+        sufixy = (
+            'ař',
+            'ář',
+            'ista',
+
+            # zřejmě měkčící, podobně jako adjektivní sufix -n- (možná je tento
+            # jen -k- a váže se naopak na adjektivum? ale podle četníka spíš ne)
+            'ník',
+            # třeba u slovo → slovník jde o slovotvornou homonymii, ale to by
+            # šlo omezit podmínkou, že dané substantivum má příznak životnosti
+        )
 
         lemma = self.lemma
         if lemma[-1] in VOKALY:
@@ -113,3 +128,33 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
         for sufix in sufixy:
             yield Substantivum(self, lemma + sufix, vyznamy=dict(konatel=True))
+
+    def adjektivum(self):
+        """
+        Kdy se používá měkký vzor a kdy tvrdý?
+
+        Je sufix -n- regresivně měkčící, nebo je to (třeba) v případě vzduch+ný
+        potence kořene, nějaké historické ś umlčené substantivními koncovkami?
+
+        TODO: s výjimkou komorní → komornější se odvozená adjektiva moc
+        nestupňují – takže přidat volbu programu, aby na vyžádání stupňoval,
+        i když _nebude uveden_ stupeň.
+        """
+        if self.atributy.get('d'):
+            return  # substantivum odvozené od adjektiva (ale: tvrdostní)
+
+        kmen = self.kmen.lower()
+
+        if kmen.endswith('ík'):  # četník → četnický (TODO: krátit)
+            yield adjektivum.Adjektivum(self, palatalizace(kmen[:-1] + "'ký"))
+        elif kmen.endswith('c'):  # Olomouc → olomoucký
+            yield adjektivum.Adjektivum(self, palatalizace(kmen + "ký"))
+        else:  # hora → horský, cestář → cestářský
+            yield adjektivum.Adjektivum(self, palatalizace(kmen + "'ský"))
+
+        # města (místa) by mohla mít příznak, který by tuhle derivaci blokoval
+        # prozatím postačí je neřešit díky velkému písmenu
+        if 'konatel' not in self.vyznamy and not self.kmen[0].isupper():
+            # TODO: v kořeni se musí krátit
+            yield adjektivum.Adjektivum(self, palatalizace(kmen + "'ní"))
+            yield adjektivum.Adjektivum(self, palatalizace(kmen + "'ný"))
