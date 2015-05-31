@@ -55,3 +55,11 @@ class SlovniTvar:
                 for lemma in odvozenina.lemmata(max_hloubka_rekurze,
                                                 hloubka_rekurze + 1):
                     yield lemma
+
+    @classmethod
+    def zakazat_proces(cls, proces):
+        setattr(cls, proces, cls.prazdny_proces)
+
+    def prazdny_proces(self):
+        if False:
+            yield self

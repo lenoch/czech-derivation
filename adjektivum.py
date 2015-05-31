@@ -77,7 +77,8 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         if self.stupen == '1' and self.lemma.endswith('ý'):
             # derivát je femininum (g = genus, jmenný rod)
             yield substantivum.Substantivum(
-                self, self.lemma[:-1] + 'ost', dict(g='F'))
+                self, self.lemma[:-1] + 'ost', dict(g='F'),
+                {'vlastnost': True})
 
     def adverbializace(self):
         if self.stupen == '1':

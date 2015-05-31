@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import logging
+import sys
 
 from adjektivum import Adjektivum
 from adverbium import Adverbium
@@ -107,5 +108,25 @@ def test():
         print('\n', flush=True)
 
 
+def nastaveni():
+    zakazat = False
+
+    for arg in sys.argv:
+        if arg == '--zakazat':
+            zakazat = True
+        elif zakazat:
+            zakazat_proces(arg)
+            zakazat = False
+
+
+def zakazat_proces(proces):
+    slovni_druh, proces = proces.split('.')
+    if slovni_druh == 'Substantivum':
+        Substantivum.zakazat_proces(proces)
+    elif slovni_druh == 'Adverbium':
+        Adverbium.zakazat_proces(proces)
+
+
 if __name__ == '__main__':
+    nastaveni()
     test()

@@ -16,9 +16,9 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
     def vytvorit_odvozeniny(self):
         return chain(
+            self.konatelska(),
             self.cirkumfixace(),
             self.prefixace(),
-            self.konatelska(),
         )
 
     def cirkumfixace(self):
@@ -50,8 +50,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         aby to fungovalo, nezbylo mi nic jiné než udělat výjimku.
         """
 
-        if self.vyznamy.keys() & frozenset(('subst_cirkumfix', 'subst_prefix',
-                                            'konatel')):
+        if self.vyznamy.keys() & frozenset(('vlastnost', 'subst_cirkumfix',
+                                            'subst_prefix', 'konatel')):
             return
 
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
@@ -99,8 +99,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         Tzn. vysoká míra nadgenerování
         """
 
-        if self.vyznamy.keys() & frozenset(('subst_cirkumfix', 'subst_prefix',
-                                            'konatel')):
+        if self.vyznamy.keys() & frozenset(('vlastnost', 'subst_cirkumfix',
+                                            'subst_prefix', 'konatel')):
             return
 
         sufixy = ['ař', 'ář', 'ista', 'ník']
