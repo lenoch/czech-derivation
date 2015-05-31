@@ -1,11 +1,20 @@
 from itertools import chain
-# import logging
 
 import adverbium
 import slovni_tvar
 import substantivum
 from transformace_hlasek import alternace1, kraceni
 from upravy import palatalizace
+
+
+NEPRAVIDELNE_KOMPARATIVY = {
+    'dobrý': 'lepší',
+    'malý': 'menší',
+    'starý': 'starší',
+    'široký': 'širší',
+    'špatný': 'horší',
+    'velký': 'větší',  # TODO: veliký?
+}
 
 
 class Adjektivum(slovni_tvar.SlovniTvar):
@@ -27,19 +36,11 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         jat = ['n', 'm', 't', 'v']  # zde se bude připojovat "ější"
         # spadá sem i ch; připojuje se jen "ší", případné krácení v kořeni
         bez_jotace = ['d', 'h', 'k', 'p']
-        # OS: supletivismus bych neřešil
-        nepravidelne = {
-            'dobrý': 'lepší',  # zejména takový
-            'malý': 'menší',
-            'starý': 'starší',
-            'široký': 'širší',
-            'špatný': 'horší',  # a tenhle
-            'velký': 'větší',
-        }
 
         if self.stupen == '1':
-            if self.lemma in nepravidelne:
-                yield Adjektivum(self, nepravidelne[self.lemma], dict(d='2'))
+            komparativ = NEPRAVIDELNE_KOMPARATIVY.get(self.lemma)
+            if komparativ:
+                yield Adjektivum(self, komparativ, dict(d='2'))
                 return
 
             kmen = self.lemma[:-1]
@@ -71,7 +72,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         elif self.stupen == '2':  # asi nemá smysl vytvářet nejnejlepšejší
             yield Adjektivum(self, 'nej' + self.lemma, dict(d='3'))
 
-    # TODO: dobrota, dobrotivý
+    # TODO: dobrota, dobrotivý (dobrotivec), dobrák
     def mladost(self):
         if self.stupen == '1' and self.lemma.endswith('ý'):
             # derivát je femininum (g = genus, jmenný rod)

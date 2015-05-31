@@ -34,10 +34,12 @@ def test():
         ('četa', dict(k='1'), {}, set(['četař', 'četník'])),
         ('hora', dict(k='1'), {}, set(['horník'])),
         ('houba', dict(k='1'), {}, set(['houbař'])),
+        # hrana?
         ('hranice', dict(k='1'), {}, set(['hraničář'])),
         ('kolo', dict(k='1'), {}, set(['kolař'])),
         ('pádlo', dict(k='1'), {}, set(['pádlař'])),
         ('traktor', dict(k='1'), {}, set(['traktorista'])),
+        # silný → silnice
         ('silnice', dict(k='1'), {}, set(['silničář'])),
         ('škola', dict(k='1'), {}, set(['školník'])),
         ('závod', dict(k='1'), {}, set(['závodník'])),
@@ -46,6 +48,7 @@ def test():
         ('český', dict(k='2', d='1'), {}, set(['česky'])),
         ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
         ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž'])),
+        # důvod → důvodný
         ('důvodný', dict(k='2', d='1'), {}, set(['bezdůvodně'])),
         ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
         ('hezký', dict(k='2', d='1'), {}, set(['hezčí'])),
