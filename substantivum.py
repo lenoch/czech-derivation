@@ -6,6 +6,24 @@ from upravy import palatalizace
 
 VOKALY = frozenset('aáeéiíoóuúyýě')
 
+# Posledních 5 prefixů lze aplikovat jen na uzavřenou množinu slov,
+# zpravidla 1-2.
+# Přídávám jejich výčet - zahraničí, prostředí, průčelí, průvodčí,
+# scestí, výročí, výsluní.
+# Dilema - utvořit výjimky nebo zbytečně přegenerovávat?
+#
+# Ondra: Radši výjimky, ale ty by měly být podložené korpusem, tedy
+# [lemma="(za|pro|prů|s|vý).+í" & tag="k1.*"]
+VZACNA_CIRKUMFIXACE = {
+    'čelo': 'průčelí',  # vážně?
+    'hranice': 'zahraničí',
+    'cesta': 'scestí',
+    'rok': 'výročí',
+    # vý-slun-í (odtrhává se tedy ze slunce deminutivní sufix -c-?)
+    'střed': 'prostředí',  # tak?
+    # prů-vodčí?
+}
+
 
 class Substantivum(slovni_tvar.SlovniTvar):
     def __init__(self, rodic=None, lemma='', atributy={}, vyznamy={}):
@@ -48,24 +66,19 @@ class Substantivum(slovni_tvar.SlovniTvar):
         K množině prefixů:
         Čerpal jsem z výzkumu - Jazyk a slovník. Vybrané lingvistické studie.
         Dostupné na Google books, str. 171-173.
-
-        Posledních 5 prefixů lze aplikovat jen na uzavřenou množinu slov,
-        zpravidla 1-2.
-        Přídávám jejich výčet - zahraničí, prostředí, průčelí, průvodčí,
-        scestí, výročí, výsluní.
-        Dilema - utvořit výjimky nebo zbytečně přegenerovávat?
-
-        Ondra: Radši výjimky, ale ty by měly být podložené korpusem, tedy
-        [word="(o|od|ná|nad|po|před|sou|ú|pří|roz|zá|za|pro|prů|s|vý).+í" &
-         tag="k1.*"]
         """
 
         if self.lemma[0].isupper() or self.vyznamy.keys() & frozenset((
             'vlastnost', 'subst_cirkumfix', 'subst_prefix', 'konatel')):
             return  # vlastní jména se taky neřeší
 
+        vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
+        if vyjimka:
+            yield Substantivum(self, vyjimka, vyznamy=dict(
+                subst_cirkumfix=True))
+
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
-                   'ú', 'pří', 'roz', 'zá', 'za', 'pro', 'prů', 's', 'vý']
+                   'ú', 'pří', 'roz', 'zá']
 
         for prefix in prefixy:
             yield Substantivum(self, palatalizace(prefix + self.kmen + 'í'),
@@ -108,8 +121,10 @@ class Substantivum(slovni_tvar.SlovniTvar):
             return
 
         sufixy = (
+            # nejspíš jde o dva alomorfy – ale na čem závisí jejich distribuce?
             'ař',
             'ář',
+
             'ista',
 
             # zřejmě měkčící, podobně jako adjektivní sufix -n- (možná je tento

@@ -32,9 +32,11 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 
 def test():
     pokusy = [
+        ('autor', dict(k='1'), dict(konatel=True), set(['autorův'])),
         ('bok', dict(k='1'), {}, set(['úbočí', 'boční'])),
         ('břeh', dict(k='1'), {}, set(['pobřeží', 'pobřežní'])),
-        ('cesta', dict(k='1'), {}, set(['rozcestí'])),
+        ('cesta', dict(k='1'), {}, set(['rozcestí', 'scestí'])),
+        ('čelo', dict(k='1'), {}, set(['průčelí'])),
         ('četa', dict(k='1'), {}, set(['četař', 'četník', 'četnický'])),
         ('doba', dict(k='1'), {}, set(['období'])),
         # do+vést?
@@ -45,8 +47,8 @@ def test():
         ('hrad', dict(k='1'), {}, set(['podhradí', 'předhradí', 'hradní'])),
         ('hrana', dict(k='1'), {}, set(['rozhraní'])),  # → hranice?
         ('hranice', dict(k='1'), {}, set(['hraničář', 'příhraničí',
-                                          'hraniční'])),
-        ('hvězda', dict(k='1'), {}, set(['souhvězdí', 'hvězdný'])),
+                                          'hraniční', 'zahraničí'])),
+        ('hvězda', dict(k='1'), {}, set(['hvězdář', 'souhvězdí', 'hvězdný'])),
         ('kolo', dict(k='1'), {}, set(['kolař', 'soukolí'])),
         # TODO: komornější jen na vyžádání (obvykle se moc nestupňuje)
         ('komora', dict(k='1'), {}, set(['komorní', 'komornější', 'komorně',
@@ -60,13 +62,14 @@ def test():
         ('Ostrava', dict(k='1'), {}, set(['ostravský', 'ostravsky'])),
         ('Praha', dict(k='1'), {}, set(['pražský'])),
         ('traktor', dict(k='1'), {}, set(['traktorista'])),
-        ('rok', dict(k='1'), {}, set(['výročí', 'roční'])),
+        ('rok', dict(k='1'), {}, set(['roční', 'výročí'])),
         ('sál', dict(k='1'), {}, set(['předsálí'])),
         # silný → silnice
         ('silnice', dict(k='1'), {}, set(['silničář', 'silniční'])),
         ('skála', dict(k='1'), {}, set(['úskalí', 'skalní'])),  # máme úskálí
         ('sklep', dict(k='1'), {}, set(['předsklepí', 'sklepní'])),
         ('slovo', dict(k='1'), {}, set(['přísloví', 'úsloví', 'slovní'])),
+        ('střed', dict(k='1'), {}, set(['prostředí'])),
         ('střecha', dict(k='1'), {}, set(['přístřeší', 'střešní'])),
         ('škola', dict(k='1'), {}, set(['školník', 'školní'])),
         # řídit → úřad?
@@ -78,7 +81,6 @@ def test():
         ('závod', dict(k='1'), {}, set(['závodník', 'závodní'])),
         ('zem', dict(k='1'), {}, set(['podzemí', 'území', 'zemní'])),
         ('země', dict(k='1'), {}, set(['zemský'])),
-        ('autorův', dict(k='2'), {}, set()),
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
         ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
         ('český', dict(k='2', d='1'), {}, set(['česky', 'češtější'])),
@@ -122,7 +124,7 @@ def test():
 
     for lemma, atributy, vyznamy, ocekavane_odvozeniny in pokusy:
         try:
-            slovo = vytvorit_slovni_tvar(lemma, atributy)
+            slovo = vytvorit_slovni_tvar(lemma, atributy, vyznamy)
         except ValueError as ve:
             logging.exception(ve)
 
