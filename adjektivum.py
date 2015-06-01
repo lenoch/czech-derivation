@@ -1,10 +1,10 @@
 from itertools import chain
+import logging
 
 import adverbium
 import slovni_tvar
 import substantivum
-from transformace_hlasek import kraceni
-from upravy import palatalizace
+from upravy import palatalizovat, zkratit
 
 NEPRAVIDELNE_KOMPARATIVY = {
     'dobrý': 'lepší',
@@ -34,8 +34,11 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         elif self.lemma[-2:] in ('ův', 'in'):
             self.kmen = self.lemma
             self.koncovka = ''
-            # TODO: to by mělo přidělovat už fundující substantivum
-            self.vyznamy['posesivni'] = True
+
+            # to by mělo přidělovat už fundující substantivum
+            if 'posesivum' not in self.vyznamy:
+                logging.warning('neoznačené posesivum? ' + self.lemma)
+                self.vyznamy['posesivum'] = True
         else:
             raise ValueError('Nerozpoznaná adjektivní koncovka: ' + self.lemma)
 
@@ -50,7 +53,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
             return self.superlativ()
 
     def komparativ(self):
-        if self.vyznamy.get('posesivni'):
+        if self.vyznamy.get('posesivum'):
             return
 
         komparativ = NEPRAVIDELNE_KOMPARATIVY.get(self.lemma)
@@ -71,13 +74,15 @@ class Adjektivum(slovni_tvar.SlovniTvar):
             komparativ = self.kmen + 'í'  # hezký > hezčí
         else:
             komparativ = self.kmen + 'ější'
-        yield Adjektivum(self, palatalizace(komparativ), dict(d='2'))
+        yield Adjektivum(self, palatalizovat(komparativ), dict(d='2'))
 
         if kmenova_finala == 'k' and len(self.kmen) >= 3:
             # krátký > kratší, úzký > užší
-            zkraceny = (self.kmen[:-3] + kraceni(self.kmen[-3]) +
-                        self.kmen[-2] + 'ší')
-            yield Adjektivum(self, palatalizace(zkraceny), dict(d='2'))
+            zkraceny = zkratit(self.kmen[:-1] + 'ší')
+            yield Adjektivum(self, palatalizovat(zkraceny), dict(d='2'))
+
+        # TODO: zjistit, jestli krácení neovliňuje kombinace souhlásek po
+        # dlouhé samohlásce (-tk-, -zk-) => korpusem
 
     def superlativ(self):
         yield Adjektivum(self, 'nej' + self.lemma, dict(d='3'))
@@ -96,4 +101,4 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         if self.lemma[-3:] in ('cký', 'ský'):
             yield adverbium.Adverbium(self, self.kmen + 'y')
         elif self.koncovka in ('í', 'ý'):
-            yield adverbium.Adverbium(self, palatalizace(self.kmen + 'ě'))
+            yield adverbium.Adverbium(self, palatalizovat(self.kmen + 'ě'))

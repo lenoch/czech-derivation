@@ -1,4 +1,0 @@
-- špatný > horší/špatnější (OS: supletivismus bych neřešil)
-- dělat hebký > hebčejší?
-- zjistit, jestli krácení neovliňuje kombinace souhlásek po dlouhé samohlásce
-  (-tk-, -zk-) => korpusem

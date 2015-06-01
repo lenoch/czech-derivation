@@ -2,7 +2,7 @@ from itertools import chain
 
 import adjektivum
 import slovni_tvar
-from upravy import palatalizace
+from upravy import palatalizovat, zkratit
 
 VOKALY = frozenset('aáeéiíoóuúyýě')
 
@@ -30,6 +30,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
         super().__init__(rodic, lemma, atributy, vyznamy)
 
         self.atributy['k'] = '1'
+        self.rod = self.atributy.get('g')
         # u deadjektiv CHCEME stupeň fundujícího slova (degree), aby už se
         # nederivovalo dál
         self.odtrhnout_koncovku()
@@ -48,6 +49,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.cirkumfixace(),
             self.prefixace(),
             self.adjektivum(),
+            self.posesivum(),
         )
 
     def cirkumfixace(self):
@@ -81,8 +83,10 @@ class Substantivum(slovni_tvar.SlovniTvar):
                    'ú', 'pří', 'roz', 'zá']
 
         for prefix in prefixy:
-            yield Substantivum(self, palatalizace(prefix + self.kmen + 'í'),
-                               vyznamy=dict(subst_cirkumfix=True))
+            yield Substantivum(self, palatalizovat(prefix + zkratit(self.kmen)
+                               + 'í'), vyznamy=dict(subst_cirkumfix=True))
+
+        # TODO: v podhůří se dlouží
 
         # TODO: slova typu „bezdůvodný“ se podle mě tvoří připojením předložky
         # bez důvodu → bez-důvod-n-ý
@@ -129,7 +133,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
             # zřejmě měkčící, podobně jako adjektivní sufix -n- (možná je tento
             # jen -k- a váže se naopak na adjektivum? ale podle četníka spíš ne)
-            'ník',
+            'ník',  # TODO: a ještě se krátí
             # třeba u slovo → slovník jde o slovotvornou homonymii, ale to by
             # šlo omezit podmínkou, že dané substantivum má příznak životnosti
         )
@@ -142,7 +146,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
             lemma = lemma[:-1] + 'č'
 
         for sufix in sufixy:
-            yield Substantivum(self, lemma + sufix, vyznamy=dict(konatel=True))
+            yield Substantivum(self, lemma + sufix, dict(g='M'),
+                               dict(konatel=True))
 
     def adjektivum(self):
         """
@@ -150,6 +155,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
         Je sufix -n- regresivně měkčící, nebo je to (třeba) v případě vzduch+ný
         potence kořene, nějaké historické ś umlčené substantivními koncovkami?
+
+        TODO: krátit se musí asi jen v kořeni, jak ukazuje zá-vod-ní
 
         TODO: s výjimkou komorní → komornější se odvozená adjektiva moc
         nestupňují – takže přidat volbu programu, aby na vyžádání stupňoval,
@@ -161,15 +168,25 @@ class Substantivum(slovni_tvar.SlovniTvar):
         kmen = self.kmen.lower()
 
         if kmen.endswith('ík'):  # četník → četnický (TODO: krátit)
-            yield adjektivum.Adjektivum(self, palatalizace(kmen[:-1] + "'ký"))
+            yield adjektivum.Adjektivum(self, palatalizovat(kmen[:-1] + "'ký"))
         elif kmen.endswith('c'):  # Olomouc → olomoucký
-            yield adjektivum.Adjektivum(self, palatalizace(kmen + "ký"))
+            yield adjektivum.Adjektivum(self, palatalizovat(kmen + "ký"))
         else:  # hora → horský, cestář → cestářský
-            yield adjektivum.Adjektivum(self, palatalizace(kmen + "'ský"))
+            yield adjektivum.Adjektivum(self, palatalizovat(kmen + "'ský"))
 
         # města (místa) by mohla mít příznak, který by tuhle derivaci blokoval
         # prozatím postačí je neřešit díky velkému písmenu
         if 'konatel' not in self.vyznamy and not self.kmen[0].isupper():
-            # TODO: v kořeni se musí krátit
-            yield adjektivum.Adjektivum(self, palatalizace(kmen + "'ní"))
-            yield adjektivum.Adjektivum(self, palatalizace(kmen + "'ný"))
+            yield adjektivum.Adjektivum(self, palatalizovat(zkratit(kmen) +
+                                        "'ní"))
+            yield adjektivum.Adjektivum(self, palatalizovat(zkratit(kmen) +
+                                        "'ný"))
+
+    def posesivum(self):
+        if self.vyznamy.get('konatel'):  # pers(on), osoba
+            if self.rod == 'M':
+                yield adjektivum.Adjektivum(self, self.kmen + 'ův', {},
+                    dict(posesivum=True))
+            elif self.rod == 'F':
+                yield adjektivum.Adjektivum(self, self.kmen + 'in', {},
+                    dict(posesivum=True))

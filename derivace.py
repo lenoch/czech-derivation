@@ -32,7 +32,7 @@ def vytvorit_slovni_tvar(lemma, atributy={}, vyznamy={}):
 
 def test():
     pokusy = [
-        ('autor', dict(k='1'), dict(konatel=True), set(['autorův'])),
+        ('autor', dict(k='1', g='M'), dict(konatel=True), set(['autorův'])),
         ('bok', dict(k='1'), {}, set(['úbočí', 'boční'])),
         ('břeh', dict(k='1'), {}, set(['pobřeží', 'pobřežní'])),
         ('cesta', dict(k='1'), {}, set(['rozcestí', 'scestí'])),
@@ -69,6 +69,7 @@ def test():
         ('skála', dict(k='1'), {}, set(['úskalí', 'skalní'])),  # máme úskálí
         ('sklep', dict(k='1'), {}, set(['předsklepí', 'sklepní'])),
         ('slovo', dict(k='1'), {}, set(['přísloví', 'úsloví', 'slovní'])),
+        ('stopa', dict(k='1'), {}, set(['stopař', 'stopařův'])),
         ('střed', dict(k='1'), {}, set(['prostředí'])),
         ('střecha', dict(k='1'), {}, set(['přístřeší', 'střešní'])),
         ('škola', dict(k='1'), {}, set(['školník', 'školní'])),
@@ -79,6 +80,7 @@ def test():
         ('vzduch', dict(k='1'), {}, set(['ovzduší', 'vzdušný'])),
         # vést → závod?
         ('závod', dict(k='1'), {}, set(['závodník', 'závodní'])),
+        ('zeď', dict(k='1'), {}, set(['zedník'])),  # TODO: ztráta měkkosti!
         ('zem', dict(k='1'), {}, set(['podzemí', 'území', 'zemní'])),
         ('země', dict(k='1'), {}, set(['zemský'])),
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),

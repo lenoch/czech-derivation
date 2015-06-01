@@ -35,9 +35,29 @@ PALATALIZACE = OrderedDict((
 PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))
 
 
-def palatalizace(slovo):
+KRACENI = OrderedDict((
+    ('á', 'a'),  # krátký → kratší
+    ('ú', 'u'),  # úzký → užší
+    # někdy se možná bude hodit: ou → u, ů → o
+))
+ZKRATIT = re.compile('|'.join(grafemy for grafemy in KRACENI))
+
+
+def palatalizovat(slovo):
+    """
+    Pokud subn najde např. „chě“ v „tichě“, zavolá pomocnou funkci, a ta mu za
+    „chě“ vyhledá náhradu „še“. Když už není co měnit, palatalizace končí.
+    """
     while True:
         slovo, zmeneno = PALATALIZOVAT.subn(
             lambda nalez: PALATALIZACE[nalez.group()], slovo)
+        if not zmeneno:
+            return slovo
+
+
+def zkratit(slovo):  # stejná funkce jako palatalizace
+    while True:
+        slovo, zmeneno = ZKRATIT.subn(lambda nalez: KRACENI[nalez.group()],
+                                     slovo)
         if not zmeneno:
             return slovo
