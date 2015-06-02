@@ -7,6 +7,7 @@ import substantivum
 from upravy import palatalizovat, zkratit
 
 NEPRAVIDELNE_KOMPARATIVY = {
+    'dlouhý': 'delší',
     'dobrý': 'lepší',
     'malý': 'menší',
     'pěkný': 'hezčí',
@@ -78,7 +79,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
 
         if kmenova_finala == 'k' and len(self.kmen) >= 3:
             # krátký > kratší, úzký > užší
-            zkraceny = zkratit(self.kmen[:-1] + 'ší')
+            zkraceny = zkratit(self.kmen[:-1]) + 'ší'
             yield Adjektivum(self, palatalizovat(zkraceny), dict(d='2'))
 
         # TODO: zjistit, jestli krácení neovliňuje kombinace souhlásek po

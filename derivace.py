@@ -86,6 +86,7 @@ def test():
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
         ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
         ('český', dict(k='2', d='1'), {}, set(['česky', 'češtější'])),
+        ('dlouhý', dict(k='2', d='1'), {}, set(['delší'])),
         ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
         ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž'])),  # dráž?
         ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
@@ -121,6 +122,7 @@ def test():
         ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
         ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),
         ('zlý', dict(k='2', d='1'), {}, set(['horší', 'zlejší'])),
+        # znamen-í → znamen-it-ý
         ('znamenitý', dict(k='2', d='1'), {}, set(['znamenitější'])),
     ]
 
