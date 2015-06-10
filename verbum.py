@@ -4,6 +4,7 @@ import adjektivum
 import slovni_tvar
 
 class Verbum(slovni_tvar.SlovniTvar):
+    # TODO: pro-dlouž-it, ob-nov-it
     PREFIXY = ('do', 'na', 'o', 's', 'u', 'vy', 'za')
     TEMATA = ('a', 'e', 'i', 'nou')
 
@@ -27,6 +28,8 @@ class Verbum(slovni_tvar.SlovniTvar):
         for tema in self.TEMATA:
             if self.kmen.endswith(tema):
                 self.tema = tema
+                # TODO: pamatovat si radši použité morfémy
+                self.vyznamy['tema'] = tema
                 break
         else:
             raise ValueError('neznámý tematický sufix')
@@ -34,8 +37,8 @@ class Verbum(slovni_tvar.SlovniTvar):
     def vytvorit_odvozeniny(self):
         return chain(
             self.negace(),
-            self.prefixace(),
             self.adjektivizace(),
+            self.prefixace(),
         )
 
     def negace(self):
@@ -49,4 +52,14 @@ class Verbum(slovni_tvar.SlovniTvar):
 
     def adjektivizace(self):
         # přes slovnědruhově sporné n-ové participium
-        yield adjektivum.Adjektivum(self, self.kmen + 'ný', dict(d='1', g='M'))
+        if self.vyznamy.get('posesivum'):
+            return
+
+        # tenčit → tenčený, plašit → plašený
+        if self.tema == 'i':
+            yield adjektivum.Adjektivum(self, self.kmen[:-1] + 'ený',
+                                        dict(d='1', g='M'))
+        else:  # plakat → plakaný
+            yield adjektivum.Adjektivum(self, self.kmen + 'ný',
+                                        dict(d='1', g='M'))
+        # TODO: posmutnělý

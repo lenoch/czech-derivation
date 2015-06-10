@@ -53,6 +53,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.posesivum(),
             self.mechovy(),
             self.autorka(),
+            # TODO: hvězda → hvězdice
         )
 
     def cirkumfixace(self):
@@ -75,7 +76,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
         if self.lemma[0].isupper() or self.vyznamy.get('anim') or (
             self.vyznamy.keys() & frozenset((
-                'vlastnost', 'subst_cirkumfix', 'subst_prefix'))):
+                'vlastnost', 'subst_cirkumfix', 'subst_prefix'))) or (
+                    self.vyznamy.get('foreign')):
             return  # vlastní jména se taky neřeší
 
         vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
@@ -90,10 +92,11 @@ class Substantivum(slovni_tvar.SlovniTvar):
             yield Substantivum(self, palatalizovat(prefix + zkratit(self.kmen)
                                + 'í'), vyznamy=dict(subst_cirkumfix=True))
 
-        # TODO: v podhůří se dlouží
+        # TODO: v podhůří se dlouží, v podhoubí se nemá krátit („podhubí“)
 
         # TODO: slova typu „bezdůvodný“ se podle mě tvoří připojením předložky
         # bez důvodu → bez-důvod-n-ý
+        # TODO: vzniká námořní (od „na moři“) přímo, bez „námoří“?
 
     def prefixace(self):
         """
@@ -155,7 +158,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         Je sufix -n- regresivně měkčící, nebo je to (třeba) v případě vzduch+ný
         potence kořene, nějaké historické ś umlčené substantivními koncovkami?
 
-        TODO: krátit se musí asi jen v kořeni, jak ukazuje zá-vod-ní
+        TODO: krátit se musí asi jen v kořeni, jak ukazuje zá-vod-n-í a
+        ná-moř-n-í
 
         TODO: s výjimkou komorní → komornější se odvozená adjektiva moc
         nestupňují – takže přidat volbu programu, aby na vyžádání stupňoval,
@@ -163,8 +167,8 @@ class Substantivum(slovni_tvar.SlovniTvar):
         """
         if self.vyznamy.get('vlastnost'):
             return  # substantivum odvozené od adjektiva (ale: tvrdostní)
-        if self.rod == 'F' and self.kmen.endswith('k'):
-            return  # k-ový sufix
+        if self.rod == 'F' and self.vyznamy.get('moce'):
+            return  # přechýlení, zatím k-ový sufix, ale jsou další
 
         kmen = self.kmen.lower()
 
@@ -199,8 +203,12 @@ class Substantivum(slovni_tvar.SlovniTvar):
             yield adjektivum.Adjektivum(self, self.kmen + 'ový', dict(g='M'))
 
     def autorka(self):
+        # přechylování, moce
         if self.rod != 'M':
             return
-        # úředník × úřednice
-        if self.koncovka == '' and not self.kmen.endswith('k'):
-            yield Substantivum(self, self.lemma + 'ka', dict(g='F'))
+        if self.kmen.endswith('ík'):  # úředník → úřednice (ten samý sufix)
+            yield Substantivum(self, self.kmen[:-2] + 'ice', dict(g='F'),
+                               dict(moce=True))
+        else:
+            yield Substantivum(self, self.kmen + 'ka', dict(g='F'),
+                               dict(moce=True))

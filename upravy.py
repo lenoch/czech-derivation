@@ -15,14 +15,17 @@ PALATALIZACE = OrderedDict((
     # palatalizace vlivem měkčícího e/i
     ('cí', 'čí'),  # hranice → příhraničí
     ('chě', 'še'),
+    ('chi', 'ši'),  # plachý → plašit
     ('chí', 'ší'),  # střecha → přístřeší
     ('hě', 'ze'),
+    ('hi', 'ži'),  # dlouhý → dloužit
     ('hí', 'ží'),  # břeh → pobřeží
     ('kě', 'ce'),
     ('ki', 'či'),  # autorka → autorčin
     ('kí', 'čí'),  # bok → úbočí
     ('lě', 'le'),
     ('rě', 'ře'),
+    ('ri', 'ři'),  # dobrý → udobřit
     ('rí', 'ří'),  # hora → pohoří
     ('sě', 'se'),
 
@@ -38,7 +41,7 @@ PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))
 
 KRACENI = OrderedDict((
     ('á', 'a'),  # krátký → kratší
-    ('í', 'i'),  # síla → silný
+    ('í', 'i'),  # síla → silný (ale: mícha → míšní)
     ('ou', 'u'),  # houba (huba taky!) → hubní
     ('ú', 'u'),  # úzký → užší
     # někdy se možná bude hodit: ou → u, ů → o

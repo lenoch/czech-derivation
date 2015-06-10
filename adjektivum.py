@@ -5,6 +5,8 @@ import adverbium
 import slovni_tvar
 import substantivum
 from upravy import palatalizovat, zkratit
+import verbum
+
 
 NEPRAVIDELNE_KOMPARATIVY = {
     'dlouhý': 'delší',
@@ -49,18 +51,19 @@ class Adjektivum(slovni_tvar.SlovniTvar):
     def vytvorit_odvozeniny(self):
         if self.stupen in ('1', 'N'):
             return chain(
-                self.komparativ() if self.gradable else [],
+                self.komparativ(),
                 self.vlastnost(),
                 self.adverbializace(),
                 self.lesnik(),
                 # self.slovnik(),
                 # TODO: starý → stařec, tvrdý → tvrďák
+                self.susit(),
             )
         elif self.stupen == '2':  # asi nemá smysl vytvářet nejnejlepšejší
             return self.superlativ()
 
     def komparativ(self):
-        if self.vyznamy.get('posesivum'):
+        if not self.gradable:  # self.vyznamy.get('posesivum'):
             return
 
         komparativ = NEPRAVIDELNE_KOMPARATIVY.get(self.lemma)
@@ -133,3 +136,21 @@ class Adjektivum(slovni_tvar.SlovniTvar):
     #         yield substantivum.Substantivum(
     #             self, self.kmen + 'ice', dict(g='F'),
     #             dict(anim=False))
+
+    def susit(self):
+        # sloveso s významem „stávat se suchým“ (ale: plachý → plašit)
+        if not self.gradable:
+            # adjektivní kořeny tuto vlastnost mají, odvozené často (?) ne, tak
+            # toho prozatím využijeme
+            return
+
+        # zabránění sekundární derivaci: udobřit → udobřený → *udobřenit
+        # (jeden tematický sufix tam už je)
+        if self.vyznamy.get('tema'):
+            return
+
+        yield verbum.Verbum(self, palatalizovat(self.kmen + 'it'), dict(a='I'),
+                            dict(tema=True))
+
+    # další: postaršit, zesmutnět, posmutnět
+    # jiná témata: blb-nou-t

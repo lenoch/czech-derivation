@@ -35,32 +35,36 @@ def test():
         ('autor', dict(k='1', g='M'), dict(anim=True), set(['autorův'])),
         ('bok', dict(k='1'), {}, set(['úbočí', 'boční'])),
         ('břeh', dict(k='1'), {}, set(['pobřeží', 'pobřežní'])),
-        ('cesta', dict(k='1'), {}, set(['rozcestí', 'scestí'])),
-        ('čelo', dict(k='1'), {}, set(['průčelí'])),
+        ('cesta', dict(k='1'), {}, set(['scestí', 'rozcestí', 'rozcestník'])),
+        ('čelo', dict(k='1'), {}, set(['průčelí', 'čelní'])),
         ('četa', dict(k='1'), {}, set(['četař', 'četník', 'četnický', 'četařka', 'četnice'])),
         ('doba', dict(k='1'), {}, set(['období', 'dobový'])),
         # do+vést?
         ('důvod', dict(k='1'), {}, set(['bezdůvodný', 'bezdůvodně',
                                         'důvodový'])),  # TODO
-        ('hlava', dict(k='1'), {}, set(['záhlaví'])),
-        ('hora', dict(k='1'), {}, set(['horník', 'pohoří', 'horský'])),
+        ('hlava', dict(k='1'), {}, set(['záhlaví', 'náhlavní', 'pohlaví',
+                                        'pohlavní', 'úhlavní'])),
+        ('hora', dict(k='1'), {}, set(['horník', 'pohoří', 'horský', 'náhorní'])),
         ('houba', dict(k='1'), {}, set(['houbař', 'podhoubí', 'houbařka',
                                         'hubní', 'houbový'])),  # TODO: houbařit
         ('housle', dict(k='1'), {'foreign': True},
          set(['houslista', 'houslový'])),
         ('hrad', dict(k='1'), {}, set(['podhradí', 'předhradí', 'hradní'])),
-        ('hrana', dict(k='1'), {}, set(['rozhraní'])),  # → hranice?
+        ('hrana', dict(k='1'), {}, set(['rozhraní', 'hranice'])),  # TODO
         ('hranice', dict(k='1'), {}, set(['hraničář', 'příhraničí',
                                           'hraniční', 'zahraničí'])),
-        ('hvězda', dict(k='1'), {}, set(['hvězdář', 'souhvězdí', 'hvězdný'])),
+        ('hvězda', dict(k='1'), {}, set(['hvězdář', 'souhvězdí', 'hvězdný',
+                                         'hvězdice'])),
         ('kolo', dict(k='1'), {}, set(['kolař', 'soukolí'])),
         # TODO: komornější jen na vyžádání (obvykle se moc nestupňuje)
         ('komora', dict(k='1'), {}, set(['komorní', 'komornější', 'komorně',
                                          'komorník'])),
         ('led', dict(k='1'), {}, set(['náledí', 'lední', 'ledový'])),
         ('les', dict(k='1'), {}, set(['podlesí', 'lesní', 'lesník'])),
+        ('mícha', dict(k='1', g='F'), {}, set(['míšní'])),  # TODO: nekrátit!
         ('pádlo', dict(k='1'), {}, set(['pádlař'])),
-        ('město', dict(k='1'), {}, set(['náměstí'])),
+        ('město', dict(k='1'), {}, set(['náměstí', 'předměstí'])),
+        ('moře', dict(k='1'), {}, set(['úmoří', 'mořský', 'námořní', 'námořník', 'námořnice'])),
         ('oko', dict(k='1'), {}, set(['obočí', 'oční'])),
         ('Olomouc', dict(k='1'), {}, set(['olomoucký', 'olomoucky'])),
         ('Ostrava', dict(k='1'), {}, set(['ostravský', 'ostravsky'])),
@@ -68,6 +72,7 @@ def test():
         ('traktor', dict(k='1'), {'foreign': True},
          set(['traktorista', 'traktoristka'])),
         ('rok', dict(k='1'), {}, set(['roční', 'výročí'])),
+        ('ruka', dict(k='1', g='F'), {}, set(['ruční', 'ručník', 'náručí', 'područí'])),
         ('sál', dict(k='1'), {}, set(['předsálí', 'sálový'])),
         ('síla', dict(k='1', g='F'), {}, set(['silný', 'silnice', 'silničář',
                                               'silniční', 'silový'])),
@@ -76,25 +81,27 @@ def test():
         ('slovo', dict(k='1'), {}, set(['přísloví', 'úsloví', 'slovní'])),
         ('stopa', dict(k='1'), {}, set(['stopař', 'stopařův', 'stopařka',
                                         'stopový'])),
-        ('střed', dict(k='1'), {}, set(['prostředí', 'středový'])),
+        ('střed', dict(k='1'), {}, set(['prostředí', 'ústředí', 'středový',
+                                        'střední'])),
         ('střecha', dict(k='1'), {}, set(['přístřeší', 'střešní'])),
-        ('škola', dict(k='1'), {}, set(['školník', 'školní'])),
+        ('škola', dict(k='1'), {}, set(['školní', 'školník'])),
         # řídit → úřad?
         ('úřad', dict(k='1'), {}, set(['úřední', 'úředník', 'úřednice'])),
         ('věta', dict(k='1'), {}, set(['souvětí', 'větný'])),
-        ('voda', dict(k='1'), {}, set(['vodní', 'povodí'])),
-        ('vzduch', dict(k='1'), {}, set(['ovzduší', 'vzdušný'])),
+        ('voda', dict(k='1'), {}, set(['vodní', 'povodí', 'podvodnice'])),
+        ('vzduch', dict(k='1'), {}, set(['ovzduší', 'vzdušný', 'provzdušnit'])),  # TODO
         # vést → závod?
-        ('závod', dict(k='1'), {}, set(['závodník', 'závodní'])),
+        ('závod', dict(k='1'), {}, set(['závodní', 'závodník', 'závodnice'])),
         ('zeď', dict(k='1'), {}, set(['zedník'])),  # TODO: ztráta měkkosti!
         ('zem', dict(k='1'), {}, set(['podzemí', 'území', 'zemní'])),
         ('země', dict(k='1'), {}, set(['zemský'])),
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
         ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
         ('český', dict(k='2', d='1'), {}, set(['česky', 'češtější'])),
-        ('dlouhý', dict(k='2', d='1'), {}, set(['delší'])),
-        ('dobrý', dict(k='2', d='1'), {}, set(['dobře'])),
-        ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž'])),  # dráž?
+        ('dlouhý', dict(k='2', d='1'), {}, set(['delší', 'dloužit'])),
+        ('dobrý', dict(k='2', d='1'), {}, set(['dobře', 'udobřit'])),
+        ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž', 'dražit',
+                                               'vydražit'])),  # dráž?
         ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
         ('hezký', dict(k='2', d='1'), {}, set(['hezčí'])),
         # hladit
@@ -106,35 +113,37 @@ def test():
         ('krátký', dict(k='2', d='1'), {}, set(['kratší'])),
         ('mělký', dict(k='2', d='1'), {}, set(['mělčí', 'mělce'])),
         ('mladý', dict(k='2', d='1'), {}, set(['mladší'])),
-        ('mrtvý', dict(k='2', d='1'), {}, set(['mrtvě', 'domrtva'])),
+        ('mrtvý', dict(k='2', d='1'), {}, set(['mrtvě', 'domrtva', 'mrtvice'])),
         ('nahý', dict(k='2', d='1'), {}, set(['donaha'])),
         ('nový', dict(k='2', d='1'), {}, set(['novější'])),
         ('pěkný', dict(k='2', d='1'), {}, set(['pěkně'])),
-        ('plachý', dict(k='2', d='1'), {}, set(['plašší', 'plaše'])),
+        ('plachý', dict(k='2', d='1'), {}, set(['plašší', 'plaše', 'plašit'])),
         ('povědomý', dict(k='2', d='1'), {}, set(['povědomě', 'povědomější'])),
         ('prostý', dict(k='2', d='1'), {}, set(['prostě', 'prostější',
                                                 'prostší'])),
-        ('přímý', dict(k='2', d='1'), {}, set(['přímější'])),
+        ('přímý', dict(k='2', d='1'), {}, set(['přímější', 'přímit', 'přímený'])),
         ('skoupý', dict(k='2', d='1'), {}, set(['skoupější', 'skoupě'])),
-        ('smutný', dict(k='2', d='1'), {}, set(['smutnější'])),
+        ('smutný', dict(k='2', d='1'), {}, set(['smutnější', 'smutnit'])),
         ('stálý', dict(k='2', d='1'), {}, set(['stálejší', 'stále'])),
         ('starý', dict(k='2', d='1'), {}, set(['starší', 'staře', 'stařec'])),
+        ('suchý', dict(k='2', d='1'), {}, set(['sušší', 'sušit', 'sušený'])),
         ('špatný', dict(k='2', d='1'), {}, set(['horší', 'špatnější'])),
-        ('tenký', dict(k='2', d='1'), {}, set(['tenčí'])),
-        ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě', 'tvrdší', 'tvrďák'])),
+        ('tenký', dict(k='2', d='1'), {}, set(['tenčí', 'tenčit'])),
+        ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě', 'tvrdší', 'tvrďák', 'tvrdit', 'tvrzený'])),
         # pláč → plakat → uplakat → uplakaný
         ('plakat', dict(k='5', e='A', a='I'), {}, set([
             'neplakat', 'doplakat', 'oplakat', 'splakat', 'uplakat',
             'vyplakat', 'zaplakat', 'uplakaný', 'uplakanější', 'uplakaně'])),
         # úžit
-        ('úzký', dict(k='2', d='1'), {}, set(['užší'])),
-        ('veselý', dict(k='2', d='1'), {}, set(['veselejší'])),
+        ('úzký', dict(k='2', d='1'), {}, set(['užší', 'úžit'])),
+        ('veselý', dict(k='2', d='1'), {}, set(['veselejší', 'veselice', 'veselit'])),
         ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),
         ('zlý', dict(k='2', d='1'), {}, set(['horší', 'zlejší'])),
-        # znamen-í → znamen-it-ý
-        ('znamenitý', dict(k='2', d='1'), {}, set(['znamenitější'])),
+        # znamen-í → znamen-it-ý (je -it- téma?)
+        ('znamenitý', dict(k='2', d='1'), {'tema': True}, set(['znamenitější'])),
     ]
 
+    chybejici_odvozeniny = []
     for lemma, atributy, vyznamy, ocekavane_odvozeniny in pokusy:
         try:
             slovo = vytvorit_slovni_tvar(lemma, atributy, vyznamy)
@@ -145,11 +154,14 @@ def test():
         slovo.vypsat_odvozeniny(max_hloubka_rekurze=5)
 
         odvozeniny = set(slovo.lemmata(max_hloubka_rekurze=5))
-        chybejici_odvozeniny = ocekavane_odvozeniny - odvozeniny
-        if chybejici_odvozeniny:
-            logging.error('chybí: %s', ', '.join(chybejici_odvozeniny))
+        chybejici = ocekavane_odvozeniny - odvozeniny
+        if chybejici:
+            chybejici_odvozeniny.append((lemma, chybejici))
 
         print('\n', flush=True)
+
+    for lemma, chybejici in chybejici_odvozeniny:
+        logging.error('chybí: %s → %s', lemma, ', '.join(chybejici))
 
 
 def nastaveni():
