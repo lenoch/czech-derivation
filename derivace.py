@@ -38,12 +38,14 @@ def test():
         ('cesta', dict(k='1'), {}, set(['rozcestí', 'scestí'])),
         ('čelo', dict(k='1'), {}, set(['průčelí'])),
         ('četa', dict(k='1'), {}, set(['četař', 'četník', 'četnický', 'četařka', 'četnice'])),
-        ('doba', dict(k='1'), {}, set(['období'])),
+        ('doba', dict(k='1'), {}, set(['období', 'dobový'])),
         # do+vést?
-        ('důvod', dict(k='1'), {}, set(['bezdůvodný', 'bezdůvodně'])),  # TODO
+        ('důvod', dict(k='1'), {}, set(['bezdůvodný', 'bezdůvodně',
+                                        'důvodový'])),  # TODO
         ('hlava', dict(k='1'), {}, set(['záhlaví'])),
         ('hora', dict(k='1'), {}, set(['horník', 'pohoří', 'horský'])),
-        ('houba', dict(k='1'), {}, set(['houbař', 'podhoubí', 'houbařka'])),
+        ('houba', dict(k='1'), {}, set(['houbař', 'podhoubí', 'houbařka',
+                                        'hubní', 'houbový'])),  # TODO: houbařit
         ('housle', dict(k='1'), {'foreign': True},
          set(['houslista', 'houslový'])),
         ('hrad', dict(k='1'), {}, set(['podhradí', 'předhradí', 'hradní'])),
@@ -55,7 +57,7 @@ def test():
         # TODO: komornější jen na vyžádání (obvykle se moc nestupňuje)
         ('komora', dict(k='1'), {}, set(['komorní', 'komornější', 'komorně',
                                          'komorník'])),
-        ('led', dict(k='1'), {}, set(['náledí', 'lední'])),
+        ('led', dict(k='1'), {}, set(['náledí', 'lední', 'ledový'])),
         ('les', dict(k='1'), {}, set(['podlesí', 'lesní', 'lesník'])),
         ('pádlo', dict(k='1'), {}, set(['pádlař'])),
         ('město', dict(k='1'), {}, set(['náměstí'])),
@@ -66,14 +68,15 @@ def test():
         ('traktor', dict(k='1'), {'foreign': True},
          set(['traktorista', 'traktoristka'])),
         ('rok', dict(k='1'), {}, set(['roční', 'výročí'])),
-        ('sál', dict(k='1'), {}, set(['předsálí'])),
+        ('sál', dict(k='1'), {}, set(['předsálí', 'sálový'])),
         ('síla', dict(k='1', g='F'), {}, set(['silný', 'silnice', 'silničář',
-                                              'silniční'])),
+                                              'silniční', 'silový'])),
         ('skála', dict(k='1'), {}, set(['úskalí', 'skalní'])),  # máme úskálí
         ('sklep', dict(k='1'), {}, set(['předsklepí', 'sklepní'])),
         ('slovo', dict(k='1'), {}, set(['přísloví', 'úsloví', 'slovní'])),
-        ('stopa', dict(k='1'), {}, set(['stopař', 'stopařův', 'stopařka'])),
-        ('střed', dict(k='1'), {}, set(['prostředí'])),
+        ('stopa', dict(k='1'), {}, set(['stopař', 'stopařův', 'stopařka',
+                                        'stopový'])),
+        ('střed', dict(k='1'), {}, set(['prostředí', 'středový'])),
         ('střecha', dict(k='1'), {}, set(['přístřeší', 'střešní'])),
         ('škola', dict(k='1'), {}, set(['školník', 'školní'])),
         # řídit → úřad?

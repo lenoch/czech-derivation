@@ -39,6 +39,7 @@ PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))
 KRACENI = OrderedDict((
     ('á', 'a'),  # krátký → kratší
     ('í', 'i'),  # síla → silný
+    ('ou', 'u'),  # houba (huba taky!) → hubní
     ('ú', 'u'),  # úzký → užší
     # někdy se možná bude hodit: ou → u, ů → o
 ))

@@ -51,6 +51,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.prefixace(),
             self.adjektivum(),
             self.posesivum(),
+            self.mechovy(),
             self.autorka(),
         )
 
@@ -191,6 +192,11 @@ class Substantivum(slovni_tvar.SlovniTvar):
             elif self.rod == 'F':
                 yield adjektivum.Adjektivum(self, palatalizovat(
                     self.kmen + 'in'), {}, dict(posesivum=True))
+
+    def mechovy(self):
+        # sálový ale silový – je to kvůli „cizosti“ slova sál?
+        if not self.vyznamy.get('anim') and not self.vyznamy.get('vlastnost'):
+            yield adjektivum.Adjektivum(self, self.kmen + 'ový', dict(g='M'))
 
     def autorka(self):
         if self.rod != 'M':
