@@ -26,6 +26,9 @@ class Adjektivum(slovni_tvar.SlovniTvar):
 
         self.atributy['k'] = '2'
         self.stupen = self.atributy.get('d')  # degree, stupeň
+        self.gradable = self.stupen in ('1', '2', '3')
+        if not self.gradable:
+            self.stupen = self.atributy['d'] = 'N'  # nestupňovatelné
         self.odtrhnout_koncovku()
 
     def odtrhnout_koncovku(self):
@@ -44,11 +47,14 @@ class Adjektivum(slovni_tvar.SlovniTvar):
             raise ValueError('Nerozpoznaná adjektivní koncovka: ' + self.lemma)
 
     def vytvorit_odvozeniny(self):
-        if self.stupen == '1':
+        if self.stupen in ('1', 'N'):
             return chain(
-                self.komparativ(),
+                self.komparativ() if self.gradable else [],
                 self.vlastnost(),
                 self.adverbializace(),
+                self.lesnik(),
+                # self.slovnik(),
+                # TODO: starý → stařec, tvrdý → tvrďák
             )
         elif self.stupen == '2':  # asi nemá smysl vytvářet nejnejlepšejší
             return self.superlativ()
@@ -94,12 +100,36 @@ class Adjektivum(slovni_tvar.SlovniTvar):
             # derivát je femininum (g = genus, jmenný rod)
             yield substantivum.Substantivum(
                 self, self.lemma[:-1] + 'ost', dict(g='F'),
-                dict(vlastnost=True))
+                dict(vlastnost=True, anim=False))
 
     def adverbializace(self):
+        if self.vyznamy.get('posesivum'):
+            return
+
         yield adverbium.Adverbium(self, self.kmen + 'o')
 
         if self.lemma[-3:] in ('cký', 'ský'):
             yield adverbium.Adverbium(self, self.kmen + 'y')
         elif self.koncovka in ('í', 'ý'):
             yield adverbium.Adverbium(self, palatalizovat(self.kmen + 'ě'))
+
+    def lesnik(self):
+        if self.lemma.endswith('ní') and not self.vyznamy.get('posesivum'):
+            yield substantivum.Substantivum(
+                self, self.kmen + 'ík', dict(g='M'),
+                dict(anim=True))
+            yield substantivum.Substantivum(
+                self, self.kmen + 'ice', dict(g='F'),
+                dict(anim=True))
+
+    # def slovnik(self):
+    #     # životnost základu asi nesouvisí s životností odvozeniny:
+    #     # slovo → slovní → slovník
+    #     # hora → horní → horník
+    #     if self.lemma.endswith('ní') and not self.vyznamy.get('posesivum'):
+    #         yield substantivum.Substantivum(
+    #             self, self.kmen + 'ík', dict(g='I'),
+    #             dict(anim=False))
+    #         yield substantivum.Substantivum(
+    #             self, self.kmen + 'ice', dict(g='F'),
+    #             dict(anim=False))

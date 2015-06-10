@@ -31,8 +31,9 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
         self.atributy['k'] = '1'
         self.rod = self.atributy.get('g')
-        # u deadjektiv CHCEME stupeň fundujícího slova (degree), aby už se
-        # nederivovalo dál
+        # u deadjektiv nechceme stupeň fundujícího slova (degree)
+        # další derivace se zastavuje jinými příznaky
+        self.atributy.pop('d', None)
         self.odtrhnout_koncovku()
 
     def odtrhnout_koncovku(self):
@@ -50,6 +51,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.prefixace(),
             self.adjektivum(),
             self.posesivum(),
+            self.autorka(),
         )
 
     def cirkumfixace(self):
@@ -70,8 +72,9 @@ class Substantivum(slovni_tvar.SlovniTvar):
         Dostupné na Google books, str. 171-173.
         """
 
-        if self.lemma[0].isupper() or self.vyznamy.keys() & frozenset((
-            'vlastnost', 'subst_cirkumfix', 'subst_prefix', 'konatel')):
+        if self.lemma[0].isupper() or self.vyznamy.get('anim') or (
+            self.vyznamy.keys() & frozenset((
+                'vlastnost', 'subst_cirkumfix', 'subst_prefix'))):
             return  # vlastní jména se taky neřeší
 
         vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
@@ -120,22 +123,14 @@ class Substantivum(slovni_tvar.SlovniTvar):
         Tzn. vysoká míra nadgenerování
         """
 
-        if self.vyznamy.keys() & frozenset(('vlastnost', 'subst_cirkumfix',
-                                            'subst_prefix', 'konatel')):
+        if self.vyznamy.get('anim') or self.vyznamy.keys() & frozenset((
+                'vlastnost', 'subst_cirkumfix', 'subst_prefix')):
             return
 
         sufixy = (
             # nejspíš jde o dva alomorfy – ale na čem závisí jejich distribuce?
             'ař',
             'ář',
-
-            'ista',
-
-            # zřejmě měkčící, podobně jako adjektivní sufix -n- (možná je tento
-            # jen -k- a váže se naopak na adjektivum? ale podle četníka spíš ne)
-            'ník',  # TODO: a ještě se krátí
-            # třeba u slovo → slovník jde o slovotvornou homonymii, ale to by
-            # šlo omezit podmínkou, že dané substantivum má příznak životnosti
         )
 
         lemma = self.lemma
@@ -145,9 +140,12 @@ class Substantivum(slovni_tvar.SlovniTvar):
         if lemma.endswith('c'):
             lemma = lemma[:-1] + 'č'
 
+        if self.vyznamy.get('foreign'):
+            yield Substantivum(self, lemma + 'ista', dict(g='M'),
+                               dict(anim=True))
         for sufix in sufixy:
             yield Substantivum(self, lemma + sufix, dict(g='M'),
-                               dict(konatel=True))
+                               dict(anim=True))
 
     def adjektivum(self):
         """
@@ -162,13 +160,16 @@ class Substantivum(slovni_tvar.SlovniTvar):
         nestupňují – takže přidat volbu programu, aby na vyžádání stupňoval,
         i když _nebude uveden_ stupeň.
         """
-        if self.atributy.get('d'):
+        if self.vyznamy.get('vlastnost'):
             return  # substantivum odvozené od adjektiva (ale: tvrdostní)
+        if self.rod == 'F' and self.kmen.endswith('k'):
+            return  # k-ový sufix
 
         kmen = self.kmen.lower()
 
-        if kmen.endswith('ík'):  # četník → četnický (TODO: krátit)
-            yield adjektivum.Adjektivum(self, palatalizovat(kmen[:-1] + "'ký"))
+        if kmen.endswith('ík'):  # četník → četnický
+            yield adjektivum.Adjektivum(self, palatalizovat(kmen[:-2] +
+                                        "ický"))
         elif kmen.endswith('c'):  # Olomouc → olomoucký
             yield adjektivum.Adjektivum(self, palatalizovat(kmen + "ký"))
         else:  # hora → horský, cestář → cestářský
@@ -176,17 +177,24 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
         # města (místa) by mohla mít příznak, který by tuhle derivaci blokoval
         # prozatím postačí je neřešit díky velkému písmenu
-        if 'konatel' not in self.vyznamy and not self.kmen[0].isupper():
+        if not self.vyznamy.get('anim') and not self.kmen[0].isupper():
             yield adjektivum.Adjektivum(self, palatalizovat(zkratit(kmen) +
                                         "'ní"))
             yield adjektivum.Adjektivum(self, palatalizovat(zkratit(kmen) +
                                         "'ný"))
 
     def posesivum(self):
-        if self.vyznamy.get('konatel'):  # pers(on), osoba
+        if self.vyznamy.get('anim'):
             if self.rod == 'M':
                 yield adjektivum.Adjektivum(self, self.kmen + 'ův', {},
-                    dict(posesivum=True))
+                                            dict(posesivum=True))
             elif self.rod == 'F':
-                yield adjektivum.Adjektivum(self, self.kmen + 'in', {},
-                    dict(posesivum=True))
+                yield adjektivum.Adjektivum(self, palatalizovat(
+                    self.kmen + 'in'), {}, dict(posesivum=True))
+
+    def autorka(self):
+        if self.rod != 'M':
+            return
+        # úředník × úřednice
+        if self.koncovka == '' and not self.kmen.endswith('k'):
+            yield Substantivum(self, self.lemma + 'ka', dict(g='F'))
