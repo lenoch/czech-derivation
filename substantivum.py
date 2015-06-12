@@ -2,7 +2,7 @@ from itertools import chain
 
 import adjektivum
 import slovni_tvar
-from upravy import palatalizovat, zkratit
+from upravy import zkratit
 
 VOKALY = frozenset('aáeéiíoóuúyýě')
 
@@ -26,23 +26,28 @@ VZACNA_CIRKUMFIXACE = {
 
 
 class Substantivum(slovni_tvar.SlovniTvar):
-    def __init__(self, rodic=None, lemma='', atributy={}, vyznamy={}):
-        super().__init__(rodic, lemma, atributy, vyznamy)
+    def __init__(self, rodic=None, atributy={}, vyznamy={}, lemma='', koren='',
+                 prefix='', sufix='', koncovka='', nahradit_sufix=None):
+        if lemma:
+            koren, koncovka = self.odtrhnout_koncovku(lemma)
+
+        super().__init__(rodic, atributy, vyznamy, koren, prefix, sufix,
+                         koncovka, nahradit_sufix)
 
         self.atributy['k'] = '1'
         self.rod = self.atributy.get('g')
         # u deadjektiv nechceme stupeň fundujícího slova (degree)
         # další derivace se zastavuje jinými příznaky
         self.atributy.pop('d', None)
-        self.odtrhnout_koncovku()
 
-    def odtrhnout_koncovku(self):
-        if self.lemma[-1] in VOKALY:
-            self.kmen = self.lemma[:-1]
-            self.koncovka = self.lemma[-1]
+    @staticmethod
+    def odtrhnout_koncovku(lemma):
+        if lemma[-1] in VOKALY:
+            # TODO: nejde jen tak odtrhnout -ě, musí se ponechat měkčení
+            # (Ruzyně → ruzyňský, jeskyně → jeskyňář)
+            return lemma[:-1], lemma[-1]
         else:
-            self.kmen = self.lemma
-            self.koncovka = ''
+            return lemma, ''
 
     def vytvorit_odvozeniny(self):
         return chain(
@@ -54,6 +59,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.mechovy(),
             self.autorka(),
             # TODO: hvězda → hvězdice
+            # TODO: deminuce
         )
 
     def cirkumfixace(self):
@@ -82,17 +88,19 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
         vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
         if vyjimka:
-            yield Substantivum(self, vyjimka, vyznamy=dict(
+            yield Substantivum(self, lemma=vyjimka, vyznamy=dict(
                 subst_cirkumfix=True))
 
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
                    'ú', 'pří', 'roz', 'zá']
 
         for prefix in prefixy:
-            yield Substantivum(self, palatalizovat(prefix + zkratit(self.kmen)
-                               + 'í'), vyznamy=dict(subst_cirkumfix=True))
+            yield Substantivum(self, prefix=prefix, koren=zkratit(self.koren),
+                               koncovka='í',
+                               vyznamy=dict(subst_cirkumfix=True))
 
-        # TODO: v podhůří se dlouží, v podhoubí se nemá krátit („podhubí“)
+        # TODO: v podhůří se dlouží (v pohoří ale ne, takže nepravidelnost?)
+        # TODO: v podhoubí se nemá krátit („podhubí“)
 
         # TODO: slova typu „bezdůvodný“ se podle mě tvoří připojením předložky
         # bez důvodu → bez-důvod-n-ý
@@ -119,37 +127,49 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
     def konatelska(self):
         """
-        Vytváření konatelských substantiv
-        V případě zakončení na vokál jej odseknu
-        K alternacím s výjimkou c -> č nedochází
-        Nakonec připojím jeden z množiny konatelských sufixů
-        Zřídka funkce utvoří více než jedno v praxi používané slovo
-        Tzn. vysoká míra nadgenerování
-        """
+        Vytváření konatelských substantiv (z neživotných jmen)
 
-        if self.vyznamy.get('anim') or self.vyznamy.keys() & frozenset((
-                'vlastnost', 'subst_cirkumfix', 'subst_prefix')):
+        -ař/-ář je produktivní,
+        -ista jde zřejmě jen ke slovům cizího původu
+        -n-ík se dělá u adjektiv
+
+        Na sufix -ic- se připojuje sufix -ář a -ic- se měkčí na -ič-:
+        sil-n-ic-e → sil-n-ič-ář, želez-n-ic-e → želez-n-ič-ář,
+        hran-ic-e → hran-ič-ář, kop-an-ic-e → kop-an-ič-ář, páleničář
+
+        Výjimečně se měkčí ještě:
+        (čep? → čepec) čepice → čepičář, oko → očař, krk → krčař, ucho → ušař
+        raritka: lžíce → Lžičař, ruka/ruce → ručař
+        většinou SYN2010, [tag="N.*" & lemma=".*č[aá]ř"] a podobné dotazy
+
+        TODO:
+        mást → z-mást → z-mat-ek → z-mat-k-ář
+        vy-sad-i-t → vý-sad-ek → vý-sad-k-ář
+        výjimky: kůň → koňař (krácení – i když jen z pohledu nominativu koně)
+        """
+        # s výjimkou hodnostáře a rovnostáře se už sufixu -ost- nederivuje
+        # (přinejmenším pomocí -ař/-ář)
+        if self.vyznamy.get('anim') or self.kmen.endswith('ost'):
             return
 
-        sufixy = (
-            # nejspíš jde o dva alomorfy – ale na čem závisí jejich distribuce?
-            'ař',
-            'ář',
-        )
+        # proti přegenerovávání  TODO: nezneužívat (tolik) příznaky
+        if self.vyznamy.keys() & frozenset(('subst_cirkumfix',
+                                            'subst_prefix')):
+            return
 
-        lemma = self.lemma
-        if lemma[-1] in VOKALY:
-            lemma = lemma[:-1]
-
-        if lemma.endswith('c'):
-            lemma = lemma[:-1] + 'č'
+        if self.kmen.endswith('ic') and self.rod == 'F':
+            yield Substantivum(self, dict(g='M'), dict(anim=True),
+                               nahradit_sufix='ič', sufix='ář')
 
         if self.vyznamy.get('foreign'):
-            yield Substantivum(self, lemma + 'ista', dict(g='M'),
-                               dict(anim=True))
-        for sufix in sufixy:
-            yield Substantivum(self, lemma + sufix, dict(g='M'),
-                               dict(anim=True))
+            yield Substantivum(self, dict(g='M'), dict(anim=True),
+                               sufix='_ist', koncovka='a')
+
+        # nejspíš jde o dva alomorfy – ale na čem závisí jejich distribuce?
+        # -ař je asi častější, -ář je asi většinou u delších (víceslabičných)
+        # slov
+        for sufix in ('ář', 'ař'):
+            yield Substantivum(self, dict(g='M'), dict(anim=True), sufix=sufix)
 
     def adjektivum(self):
         """
@@ -170,45 +190,51 @@ class Substantivum(slovni_tvar.SlovniTvar):
         if self.rod == 'F' and self.vyznamy.get('moce'):
             return  # přechýlení, zatím k-ový sufix, ale jsou další
 
-        kmen = self.kmen.lower()
+        koren = self.koren.lower()
 
-        if kmen.endswith('ík'):  # četník → četnický
-            yield adjektivum.Adjektivum(self, palatalizovat(kmen[:-2] +
-                                        "ický"))
-        elif kmen.endswith('c'):  # Olomouc → olomoucký
-            yield adjektivum.Adjektivum(self, palatalizovat(kmen + "ký"))
-        else:  # hora → horský, cestář → cestářský
-            yield adjektivum.Adjektivum(self, palatalizovat(kmen + "'ský"))
+        if self.kmen.endswith('ík'):  # četník → četnický
+            yield adjektivum.Adjektivum(self, koren=koren, nahradit_sufix='ic',
+                                        sufix='k', koncovka='ý')
+        elif self.kmen.endswith('c'):  # Olomouc → olomoucký
+            yield adjektivum.Adjektivum(self, koren=koren, sufix='k',
+                                        koncovka='ý')
+        else:  # hora → horský, cestář → cestářský, Praha → pražský
+            # měkčení?  bůh → božský, Valach → valašský, loni → loňský,
+            # Ostroh → ostrožský
+            yield adjektivum.Adjektivum(self, koren=koren, sufix='sk',
+                                        koncovka='ý')
 
         # města (místa) by mohla mít příznak, který by tuhle derivaci blokoval
         # prozatím postačí je neřešit díky velkému písmenu
         if not self.vyznamy.get('anim') and not self.kmen[0].isupper():
-            yield adjektivum.Adjektivum(self, palatalizovat(zkratit(kmen) +
-                                        "'ní"))
-            yield adjektivum.Adjektivum(self, palatalizovat(zkratit(kmen) +
-                                        "'ný"))
+            sufix = "'n" if self.kmen[-1] in ('chk') else 'n'  # bok → boční
+            yield adjektivum.Adjektivum(self, koren=zkratit(self.koren),
+                                        sufix=sufix, koncovka='í')
+            yield adjektivum.Adjektivum(self, koren=zkratit(self.koren),
+                                        sufix=sufix, koncovka='ý')
 
     def posesivum(self):
         if self.vyznamy.get('anim'):
             if self.rod == 'M':
-                yield adjektivum.Adjektivum(self, self.kmen + 'ův', {},
-                                            dict(posesivum=True))
+                yield adjektivum.Adjektivum(self, {}, dict(posesivum=True),
+                                            sufix='ův')
             elif self.rod == 'F':
-                yield adjektivum.Adjektivum(self, palatalizovat(
-                    self.kmen + 'in'), {}, dict(posesivum=True))
+                yield adjektivum.Adjektivum(self, {}, dict(posesivum=True),
+                                            sufix="'in")
 
     def mechovy(self):
         # sálový ale silový – je to kvůli „cizosti“ slova sál?
         if not self.vyznamy.get('anim') and not self.vyznamy.get('vlastnost'):
-            yield adjektivum.Adjektivum(self, self.kmen + 'ový', dict(g='M'))
+            yield adjektivum.Adjektivum(self, dict(g='M'), sufix='ov',
+                                        koncovka='ý')
 
     def autorka(self):
         # přechylování, moce
         if self.rod != 'M':
             return
         if self.kmen.endswith('ík'):  # úředník → úřednice (ten samý sufix)
-            yield Substantivum(self, self.kmen[:-2] + 'ice', dict(g='F'),
-                               dict(moce=True))
+            yield Substantivum(self, dict(g='F'), dict(moce=True),
+                               nahradit_sufix='ic', koncovka='e')
         else:
-            yield Substantivum(self, self.kmen + 'ka', dict(g='F'),
-                               dict(moce=True))
+            yield Substantivum(self, dict(g='F'), dict(moce=True), sufix='k',
+                               koncovka='a')

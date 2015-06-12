@@ -13,6 +13,9 @@ PALATALIZACE = OrderedDict((
     ('zš', 'žš'),
 
     # palatalizace vlivem měkčícího e/i
+    ('skě', 'ště'),  # lidský → lidštější
+    ('ckě', 'čtě'),
+    ('cě', 'če'),  # mělce → mělčeji
     ('cí', 'čí'),  # hranice → příhraničí
     ('chě', 'še'),
     ('chi', 'ši'),  # plachý → plašit
@@ -31,9 +34,10 @@ PALATALIZACE = OrderedDict((
 
     # vynucená regresivní palatalizace? (vzduch+'ný → vzdušný)
     ("c'", "č"),
-    ("h'", "ž"),
+    ("h'", "ž"),  # Praha → pražský
     ("ch'", "š"),
     ("k'", "č"),
+    ("r'", "ř"),  # udobřit → udobřený
     ("'", ""),
 ))
 PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))

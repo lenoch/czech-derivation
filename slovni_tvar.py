@@ -1,22 +1,49 @@
+from upravy import palatalizovat
+
+
 class SlovniTvar:
-    def __init__(self, rodic=None, lemma='', atributy={}, vyznamy={}):
+    def __init__(self, rodic=None, atributy={}, vyznamy={}, koren='',
+                 prefix='', sufix='', koncovka='', nahradit_sufix=None):
         """
         Slovní tvar se dá vytvořit od jiného a k tomu doplnit některé položky.
         """
         self.rodic = rodic  # odkaz na fundující slovo
         if rodic:
-            self.lemma = rodic.lemma
+            self.koren = rodic.koren
+            self.prefixy = list(rodic.prefixy)
+            self.sufixy = list(rodic.sufixy)
+            self.koncovka = rodic.koncovka
+
             self.atributy = dict(rodic.atributy)
             self.vyznamy = dict(rodic.vyznamy)
 
-            if lemma:
-                self.lemma = lemma
+            if koren:
+                self.koren = koren
+            if prefix:
+                self.prefixy.insert(0, prefix)
+            if nahradit_sufix is not None:
+                self.sufixy[-1] = nahradit_sufix
+            if sufix:
+                self.sufixy.append(sufix)
+                self.koncovka = ''
+            if koncovka:
+                self.koncovka = koncovka
+
             self.atributy.update(atributy)
             self.vyznamy.update(vyznamy)
         else:
-            self.lemma = lemma
+            self.koren = koren
+            self.prefixy = [prefix] if prefix else []
+            self.sufixy = [sufix] if sufix else []
+            self.koncovka = koncovka
+
             self.atributy = dict(atributy)
             self.vyznamy = dict(vyznamy)
+
+        self.kmen = palatalizovat(''.join(self.prefixy) + self.koren +
+                                  ''.join(self.sufixy))
+        self.lemma = palatalizovat(self.kmen + self.koncovka).replace('_', '')
+        self.kmen = self.kmen.replace('_', '')
 
     def __str__(self):
         return '  '.join((self.lemma, self.zformatovat_atributy(),
