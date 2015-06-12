@@ -12,6 +12,7 @@ class SlovniTvar:
             self.koren = rodic.koren
             self.prefixy = list(rodic.prefixy)
             self.sufixy = list(rodic.sufixy)
+            self.tema = rodic.tema  # nastavuje sloveso
             self.koncovka = rodic.koncovka
 
             self.atributy = dict(rodic.atributy)
@@ -35,15 +36,22 @@ class SlovniTvar:
             self.koren = koren
             self.prefixy = [prefix] if prefix else []
             self.sufixy = [sufix] if sufix else []
+            self.tema = None
             self.koncovka = koncovka
 
             self.atributy = dict(atributy)
             self.vyznamy = dict(vyznamy)
 
-        self.kmen = palatalizovat(''.join(self.prefixy) + self.koren +
-                                  ''.join(self.sufixy))
-        self.lemma = palatalizovat(self.kmen + self.koncovka).replace('_', '')
-        self.kmen = self.kmen.replace('_', '')
+    @property
+    def kmen(self):
+        return palatalizovat(''.join(self.prefixy) + self.koren +
+                             ''.join(self.sufixy)).replace('_', '')
+
+    @property
+    def lemma(self):
+        return palatalizovat(''.join(self.prefixy) + self.koren +
+                             ''.join(self.sufixy) +
+                             self.koncovka).replace('_', '')
 
     def __str__(self):
         return '  '.join((self.lemma, self.zformatovat_atributy(),

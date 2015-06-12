@@ -9,17 +9,18 @@ class Verbum(slovni_tvar.SlovniTvar):
     TEMATA = ('a', 'e', 'i', 'nou')
 
     def __init__(self, rodic=None, atributy={}, vyznamy={}, lemma='', koren='',
-                 prefix='', sufix='', koncovka=''):
+                 prefix='', tema='', koncovka=''):
         if lemma:
-            koren, sufix, koncovka = self.zjistit_tema(lemma)
+            koren, tema, koncovka = self.zjistit_tema(lemma)
 
-        super().__init__(rodic, atributy, vyznamy, koren, prefix, sufix,
+        super().__init__(rodic, atributy, vyznamy, koren, prefix, tema,
                          koncovka)
 
         self.atributy['k'] = '5'
         self.neg = self.atributy.get('e')
         self.aspekt = self.atributy.get('a')
-        self.tema = self.sufixy[-1] if self.sufixy else ''
+        if tema:
+            self.tema = tema
 
         modus = self.atributy.get('m')
         if modus is not None and modus != 'F':
@@ -40,14 +41,9 @@ class Verbum(slovni_tvar.SlovniTvar):
 
     def vytvorit_odvozeniny(self):
         return chain(
-            self.negace(),
             self.adjektivizace(),
             self.prefixace(),
         )
-
-    def negace(self):
-        if self.neg != 'N':
-            yield Verbum(self, dict(e='N'), prefix='ne')
 
     def prefixace(self):
         if self.neg != 'N' and self.aspekt == 'I':
@@ -67,4 +63,3 @@ class Verbum(slovni_tvar.SlovniTvar):
         else:  # plakat → plakaný
             yield adjektivum.Adjektivum(self, dict(d='1', g='M'), sufix='n',
                                         koncovka='ý')
-        # TODO: posmutnělý

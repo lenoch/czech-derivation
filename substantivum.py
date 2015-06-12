@@ -15,12 +15,12 @@ VOKALY = frozenset('aáeéiíoóuúyýě')
 # Ondra: Radši výjimky, ale ty by měly být podložené korpusem, tedy
 # [lemma="(za|pro|prů|s|vý).+í" & tag="k1.*"]
 VZACNA_CIRKUMFIXACE = {
-    'čelo': 'průčelí',  # vážně?
-    'hranice': 'zahraničí',
-    'cesta': 'scestí',
-    'rok': 'výročí',
+    'cesta': 's',
+    'čelo': 'prů',  # vážně?
+    'hranice': 'za',
+    'rok': 'vý',
     # vý-slun-í (odtrhává se tedy ze slunce deminutivní sufix -c-?)
-    'střed': 'prostředí',  # tak?
+    'střed': 'pro',  # tak?
     # prů-vodčí?
 }
 
@@ -42,7 +42,9 @@ class Substantivum(slovni_tvar.SlovniTvar):
 
     @staticmethod
     def odtrhnout_koncovku(lemma):
-        if lemma[-1] in VOKALY:
+        if lemma.endswith('ně'):
+            return lemma[:-2] + 'ň', 'e'
+        elif lemma[-1] in VOKALY:
             # TODO: nejde jen tak odtrhnout -ě, musí se ponechat měkčení
             # (Ruzyně → ruzyňský, jeskyně → jeskyňář)
             return lemma[:-1], lemma[-1]
@@ -58,7 +60,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
             self.posesivum(),
             self.mechovy(),
             self.autorka(),
-            # TODO: hvězda → hvězdice
+            self.hvezdice(),
             # TODO: deminuce
         )
 
@@ -86,13 +88,12 @@ class Substantivum(slovni_tvar.SlovniTvar):
                     self.vyznamy.get('foreign')):
             return  # vlastní jména se taky neřeší
 
-        vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
-        if vyjimka:
-            yield Substantivum(self, lemma=vyjimka, vyznamy=dict(
-                subst_cirkumfix=True))
-
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
                    'ú', 'pří', 'roz', 'zá']
+
+        vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
+        if vyjimka:
+            prefixy.insert(0, vyjimka)
 
         for prefix in prefixy:
             yield Substantivum(self, prefix=prefix, koren=zkratit(self.koren),
@@ -238,3 +239,13 @@ class Substantivum(slovni_tvar.SlovniTvar):
         else:
             yield Substantivum(self, dict(g='F'), dict(moce=True), sufix='k',
                                koncovka='a')
+
+    def hvezdice(self):
+        """
+        hvězd-a > hvězd-ic-e (asi od neživotných feminin)
+        """
+        if self.sufixy and self.sufixy[-1] in ('ost', 'ic'):
+            return
+
+        if self.rod == 'F' and not self.vyznamy.get('anim'):
+            yield Substantivum(self, sufix='ic', koncovka='e')

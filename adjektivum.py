@@ -134,11 +134,10 @@ class Adjektivum(slovni_tvar.SlovniTvar):
 
         # zabránění sekundární derivaci: udobřit → udobřený → *udobřenit
         # (jeden tematický sufix tam už je)
-        if self.vyznamy.get('tema'):
+        if self.tema:
             return
 
-        yield verbum.Verbum(self, dict(a='I'), dict(tema=True), sufix='i',
-                            koncovka='t')
+        yield verbum.Verbum(self, dict(a='I'), tema='i', koncovka='t')
 
     # další: postaršit, zesmutnět, posmutnět
     # jiná témata: blb-nou-t

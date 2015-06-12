@@ -38,7 +38,12 @@ PALATALIZACE = OrderedDict((
     ("ch'", "š"),
     ("k'", "č"),
     ("r'", "ř"),  # udobřit → udobřený
+    ("st'e", "ště"),  # vyprostit → vyproštěný
     ("'", ""),
+
+    # zpětná úprava pravopisu (po rozseknutí jeskyně na jeskyň-i)
+    ('ňe', 'ně'),
+    ('ňn', 'nn'),  # jeskynní
 ))
 PALATALIZOVAT = re.compile('|'.join(grafemy for grafemy in PALATALIZACE))
 

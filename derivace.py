@@ -43,19 +43,22 @@ def test():
         ('důvod', dict(k='1'), {}, set(['bezdůvodný', 'bezdůvodně',
                                         'důvodový'])),  # TODO
         ('dvůr', dict(k='1'), {}, set(['nádvoří', 'dvorský'])),
-        ('hlava', dict(k='1'), {}, set(['záhlaví', 'náhlavní', 'pohlaví',
-                                        'pohlavní', 'úhlavní'])),
+        ('hlava', dict(k='1', g='F'), {}, set(['záhlaví', 'náhlavní',
+                                               'pohlaví', 'pohlavní',
+                                               'úhlavní', 'hlavice'])),
         ('hora', dict(k='1'), {}, set(['horník', 'pohoří', 'podhůří', 'horský', 'náhorní'])),
         ('houba', dict(k='1'), {}, set(['houbař', 'podhoubí', 'houbařka',
                                         'hubní', 'houbový', 'houbařský'])),  # TODO: houbařit
         ('housle', dict(k='1'), {'foreign': True},
          set(['houslista', 'houslový'])),
         ('hrad', dict(k='1'), {}, set(['podhradí', 'předhradí', 'hradní'])),
-        ('hrana', dict(k='1'), {}, set(['rozhraní', 'hranice'])),  # TODO
-        ('hranice', dict(k='1'), {}, set(['hraničář', 'příhraničí',
-                                          'hraniční', 'zahraničí'])),
-        ('hvězda', dict(k='1'), {}, set(['hvězdář', 'souhvězdí', 'hvězdný',
-                                         'hvězdice', 'hvězdářský'])),
+        ('hrana', dict(k='1', g='F'), {}, set(['rozhraní', 'hranice',
+                                               'hraničář', 'příhraničí',
+                                               'hraniční', 'zahraničí'])),
+        ('hvězda', dict(k='1', g='F'), {}, set(['hvězdář', 'souhvězdí',
+                                                'hvězdný', 'hvězdice',
+                                                'hvězdářský'])),
+        ('jeskyně', dict(k='1'), {}, set(['jeskynní', 'jeskyňář'])),
         ('kolo', dict(k='1'), {}, set(['kolař', 'soukolí'])),
         # TODO: komornější jen na vyžádání (obvykle se moc nestupňuje)
         ('komora', dict(k='1'), {}, set(['komorní', 'komornější', 'komorně',
@@ -77,7 +80,7 @@ def test():
         ('sál', dict(k='1'), {}, set(['předsálí', 'sálový'])),
         ('síla', dict(k='1', g='F'), {}, set(['silný', 'silnice', 'silničář',
                                               'silniční', 'silový'])),
-        ('skála', dict(k='1'), {}, set(['úskalí', 'skalní'])),  # máme úskálí
+        ('skála', dict(k='1'), {}, set(['úskalí', 'skalní'])),
         ('sklep', dict(k='1'), {}, set(['předsklepí', 'sklepní'])),
         ('slovo', dict(k='1'), {}, set(['přísloví', 'úsloví', 'slovní'])),  # slovníkář
         ('stopa', dict(k='1'), {}, set(['stopař', 'stopařův', 'stopařka',
@@ -99,24 +102,24 @@ def test():
         ('blbý', dict(k='2', d='1'), {}, set(['blbější', 'blbě'])),
         ('bosý', dict(k='2', d='1'), {}, set(['bose', 'naboso'])),
         ('český', dict(k='2', d='1'), {}, set(['česky', 'češtější'])),
-        ('dlouhý', dict(k='2', d='1'), {}, set(['delší', 'dloužit'])),
+        ('dlouhý', dict(k='2', d='1'), {}, set(['delší', 'dloužit', 'prodloužit'])),
         ('dobrý', dict(k='2', d='1'), {}, set(['dobře', 'udobřit', 'udobřený'])),
         ('drahý', dict(k='2', d='1'), {}, set(['dražší', 'dráž', 'dražit',
                                                'vydražit'])),  # dráž?
         ('hebký', dict(k='2', d='1'), {}, set(['hebčí'])),  # chceme hebčejší?
         ('hezký', dict(k='2', d='1'), {}, set(['hezčí'])),
-        # hladit
+        # hlad-i-t → hlad-k-ý?
         ('hladký', dict(k='2', d='1'), {}, set(['hladší', 'hladce'])),
         ('hloupý', dict(k='2', d='1'), {}, set(['hloupě', 'hloupější', 'hlupák', 'hlupácký'])),
         ('hluchý', dict(k='2', d='1'), {}, set(['hluše', 'hlušší'])),
         ('chrabrý', dict(k='2', d='1'), {}, set(['chrabře', 'chrabřejší'])),
-        # krátit
+        # krát-i-t → krát-k-ý?
         ('krátký', dict(k='2', d='1'), {}, set(['kratší'])),
         ('mělký', dict(k='2', d='1'), {}, set(['mělčí', 'mělce'])),
         ('mladý', dict(k='2', d='1'), {}, set(['mladší'])),
         ('mrtvý', dict(k='2', d='1'), {}, set(['mrtvě', 'domrtva', 'mrtvice'])),
         ('nahý', dict(k='2', d='1'), {}, set(['donaha'])),
-        ('nový', dict(k='2', d='1'), {}, set(['novější'])),
+        ('nový', dict(k='2', d='1'), {}, set(['novější', 'obnovit'])),
         ('pěkný', dict(k='2', d='1'), {}, set(['pěkně'])),
         ('plachý', dict(k='2', d='1'), {}, set(['plašší', 'plaše', 'plašit'])),
         ('povědomý', dict(k='2', d='1'), {}, set(['povědomě', 'povědomější'])),
@@ -124,18 +127,19 @@ def test():
                                                 'prostší'])),
         ('přímý', dict(k='2', d='1'), {}, set(['přímější', 'přímit', 'přímený'])),
         ('skoupý', dict(k='2', d='1'), {}, set(['skoupější', 'skoupě'])),
-        ('smutný', dict(k='2', d='1'), {}, set(['smutnější', 'smutnit'])),
+        # „posmutnělý“ ať už si vytvoří (m)ajka, to už je flexe a ne derivace
+        ('smutný', dict(k='2', d='1'), {}, set(['smutnější', 'smutnit', 'posmutnět'])),
         ('stálý', dict(k='2', d='1'), {}, set(['stálejší', 'stále'])),
         ('starý', dict(k='2', d='1'), {}, set(['starší', 'staře', 'stařec', 'stařecký'])),
         ('suchý', dict(k='2', d='1'), {}, set(['sušší', 'sušit', 'sušený', 'suše'])),
         ('špatný', dict(k='2', d='1'), {}, set(['horší', 'špatnější'])),
         ('tenký', dict(k='2', d='1'), {}, set(['tenčí', 'tenčit'])),
         ('tvrdý', dict(k='2', d='1'), {}, set(['tvrdě', 'tvrdší', 'tvrďák', 'tvrďácký', 'tvrdit', 'tvrzený'])),
-        # pláč → plakat → uplakat → uplakaný
+        # pláč → plakat → uplakat → uplakaný (zas jen flexe)
         ('plakat', dict(k='5', e='A', a='I'), {}, set([
             'neplakat', 'doplakat', 'oplakat', 'splakat', 'uplakat',
             'vyplakat', 'zaplakat', 'uplakaný', 'uplakanější', 'uplakaně'])),
-        # úžit
+        # úžit → úz-k-ý?
         ('úzký', dict(k='2', d='1'), {}, set(['užší', 'úžit'])),
         ('veselý', dict(k='2', d='1'), {}, set(['veselejší', 'veselice', 'veselit'])),
         ('vzácný', dict(k='2', d='1'), {}, set(['vzácnější'])),

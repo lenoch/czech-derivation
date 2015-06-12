@@ -58,6 +58,9 @@ class Adverbium(slovni_tvar.SlovniTvar):
 
     # Jiné způsoby derivace než prefixaci a sufixaci neznáme
     def prefixace_sufixace(self):
+        if self.prefixy:
+            return  # nebudeme na sebe lepit víc prefixů, než je potřeba
+
         if self.lemma.endswith('o') and self.vyznamy.get('prefix') != 'na':
             yield Adverbium(self, vyznamy={'prefix': 'na'}, prefix='na')
 
