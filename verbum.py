@@ -16,7 +16,7 @@ class Verbum(slovni_tvar.SlovniTvar):
         super().__init__(rodic, atributy, vyznamy, koren, prefix, tema,
                          koncovka)
 
-        self.atributy['k'] = '5'
+        self.atributy['k'] = '5'  # kind, slovní druh, part of speech (POS)
         self.neg = self.atributy.get('e')
         self.aspekt = self.atributy.get('a')
         if tema:

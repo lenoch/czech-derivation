@@ -47,7 +47,7 @@ class Adverbium(slovni_tvar.SlovniTvar):
         super().__init__(rodic, atributy, vyznamy, koren, prefix, sufix,
                          koncovka)
 
-        self.atributy['k'] = '6'
+        self.atributy['k'] = '6'  # kind, slovní druh, part of speech (POS)
         self.stupen = self.atributy.get('d')  # degree, stupeň
 
     def vytvorit_odvozeniny(self):

@@ -30,8 +30,8 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         super().__init__(rodic, atributy, vyznamy, koren, prefix, sufix,
                          koncovka, nahradit_sufix)
 
-        self.atributy['k'] = '2'
-        self.stupen = self.atributy.get('d')  # degree, stupeň
+        self.atributy['k'] = '2'  # kind, slovní druh, part of speech (POS)
+        self.stupen = self.atributy.get('d', '1')  # degree, stupeň
         self.gradable = self.stupen in ('1', '2', '3')
         if not self.gradable:
             self.stupen = self.atributy['d'] = 'N'  # nestupňovatelné
