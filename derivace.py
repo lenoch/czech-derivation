@@ -144,7 +144,7 @@ def test():
                                       'vodnický']),
         (Adjektivum(lemma='vzácný'), ['vzácnější']),
         (Substantivum(lemma='vzduch'), ['ovzduší', 'vzdušný',
-                                        'provzdušnit']),  # TODO
+                                        'provzdušnit']),
         # vést → závod?
         (Substantivum(prefix='zá', koren='vod'), ['závodní', 'závodník',
                                                   'závodnice', 'závodnický']),

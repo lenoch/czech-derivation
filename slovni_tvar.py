@@ -37,7 +37,7 @@ class SlovniTvar:
             self.prefixy = [prefix] if prefix else []
             self.sufixy = [sufix] if sufix else []
             self.tema = None
-            self.koncovka = koncovka
+            self.koncovka = koncovka or ''
 
             self.atributy = dict(atributy)
             self.vyznamy = dict(vyznamy)

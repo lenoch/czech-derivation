@@ -9,7 +9,7 @@ VOKALY = frozenset('aáeéiíoóuúyýě')
 
 class Substantivum(slovni_tvar.SlovniTvar):
     def __init__(self, rodic=None, atributy={}, vyznamy={}, lemma='', koren='',
-                 prefix='', sufix='', koncovka='', nahradit_sufix=None):
+                 prefix='', sufix='', koncovka=None, nahradit_sufix=None):
         if lemma:
             koren, koncovka = self.odtrhnout_koncovku(lemma)
 

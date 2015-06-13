@@ -4,12 +4,11 @@ import adjektivum
 import slovni_tvar
 
 class Verbum(slovni_tvar.SlovniTvar):
-    # TODO: pro-dlouž-it, ob-nov-it
-    PREFIXY = ('do', 'na', 'o', 's', 'u', 'vy', 'za')
+    PREFIXY = ('do', 'na', 'o', 'ob', 'pro', 's', 'u', 'vy', 'z', 'za')
     TEMATA = ('a', 'e', 'i', 'nou')
 
     def __init__(self, rodic=None, atributy={}, vyznamy={}, lemma='', koren='',
-                 prefix='', tema='', koncovka=''):
+                 prefix='', tema='', koncovka=None):
         if lemma:
             koren, tema, koncovka = self.zjistit_tema(lemma)
 
