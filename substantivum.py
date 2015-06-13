@@ -3,27 +3,9 @@ from itertools import chain
 import adjektivum
 import slovni_tvar
 from upravy import zkratit
+from vyjimky import ZAHRANICI
 
 VOKALY = frozenset('aáeéiíoóuúyýě')
-
-# Posledních 5 prefixů lze aplikovat jen na uzavřenou množinu slov,
-# zpravidla 1-2.
-# Přídávám jejich výčet - zahraničí, prostředí, průčelí, průvodčí,
-# scestí, výročí, výsluní.
-# Dilema - utvořit výjimky nebo zbytečně přegenerovávat?
-#
-# Ondra: Radši výjimky, ale ty by měly být podložené korpusem, tedy
-# [lemma="(za|pro|prů|s|vý).+í" & tag="k1.*"]
-VZACNA_CIRKUMFIXACE = {
-    'cesta': 's',
-    'čelo': 'prů',  # vážně?
-    'hranice': 'za',
-    'rok': 'vý',
-    # vý-slun-í (odtrhává se tedy ze slunce deminutivní sufix -c-?)
-    'střed': 'pro',  # tak?
-    # prů-vodčí?
-}
-
 
 class Substantivum(slovni_tvar.SlovniTvar):
     def __init__(self, rodic=None, atributy={}, vyznamy={}, lemma='', koren='',
@@ -91,7 +73,7 @@ class Substantivum(slovni_tvar.SlovniTvar):
         prefixy = ['o', 'ob', 'od', 'ná', 'nad', 'po', 'pod', 'před', 'sou',
                    'ú', 'pří', 'roz', 'zá']
 
-        vyjimka = VZACNA_CIRKUMFIXACE.get(self.lemma)
+        vyjimka = ZAHRANICI.get(self.lemma)
         if vyjimka:
             prefixy.insert(0, vyjimka)
 

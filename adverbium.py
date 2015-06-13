@@ -1,25 +1,7 @@
 from itertools import chain
 
 import slovni_tvar
-
-
-_VYJIMKY_U_KOMPARATIVU = (
-    (['dobře'], ['lépe', 'líp']),
-    (['zle', 'špatně'], ['hůře', 'hůř']),
-    (['brzy'], ['dříve', 'dřív']),
-    (['dlouze', 'dlouho'], ['déle']),
-    (['vysoce', 'vysoko'], ['výš', 'výše']),
-    (['málo'], ['méně', 'míň']),
-    (['těžko', 'těžce'], ['tíže', 'tíž']),
-    (['snadno', 'snadně'], ['snáze', 'snáz', 'snadněji']),
-    (['hluboko', 'hluboce'], ['hloub', 'blouběji']),
-    (['široko', 'široce'], ['šíře', 'šíř', 'šířeji']),
-    (['úzko', 'úzce'], ['úže', 'úžeji']),
-)
-VYJIMKY_U_KOMPARATIVU = {}
-for pozitivy, komparativy in _VYJIMKY_U_KOMPARATIVU:
-    for pozitiv in pozitivy:
-        VYJIMKY_U_KOMPARATIVU[pozitiv] = komparativy
+from vyjimky import ADVERBIALNI_KOMPARATIVY
 
 zakonceni = [  # TODO: dočasné
     ('dý', 'dě'),
@@ -76,7 +58,7 @@ class Adverbium(slovni_tvar.SlovniTvar):
 
     def stupnovani(self):
         if self.stupen == '1':
-            vyjimky = VYJIMKY_U_KOMPARATIVU.get(self.lemma, [])
+            vyjimky = ADVERBIALNI_KOMPARATIVY.get(self.lemma, [])
             if vyjimky:
                 for vyjimka in vyjimky:
                     yield Adverbium(self, dict(d='2'), lemma=vyjimka)

@@ -6,19 +6,7 @@ import slovni_tvar
 import substantivum
 from upravy import zkratit
 import verbum
-
-NEPRAVIDELNE_KOMPARATIVY = {
-    'dlouhý': 'delší',
-    'dobrý': 'lepší',
-    'malý': 'menší',
-    'pěkný': 'hezčí',
-    'starý': 'starší',
-    'široký': 'širší',
-    'špatný': 'horší',
-    'velký': 'větší',
-    'veliký': 'větší',
-    'zlý': 'horší',
-}
+from vyjimky import NEPRAVIDELNE_KOMPARATIVY
 
 
 class Adjektivum(slovni_tvar.SlovniTvar):
