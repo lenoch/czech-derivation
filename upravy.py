@@ -53,7 +53,7 @@ KRACENI = OrderedDict((
     ('í', 'i'),  # síla → silný (ale: mícha → míšní)
     ('ou', 'u'),  # houba (huba taky!) → hubní
     ('ú', 'u'),  # úzký → užší
-    # někdy se možná bude hodit: ou → u, ů → o
+    ('ů', 'o'),  # dvůr → nádvoří
 ))
 ZKRATIT = re.compile('|'.join(grafemy for grafemy in KRACENI))
 
