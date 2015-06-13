@@ -25,17 +25,30 @@ zakonceni = [  # TODO: dočasné
 
 class Adverbium(slovni_tvar.SlovniTvar):
     def __init__(self, rodic=None, atributy={}, vyznamy={}, lemma='', koren='',
-                 prefix='', sufix='', koncovka=''):
+                 prefix='', sufix='', koncovka=None):
+        if lemma:
+            koren, koncovka = self.odtrhnout_koncovku(lemma)
+
         super().__init__(rodic, atributy, vyznamy, koren, prefix, sufix,
                          koncovka)
 
         self.atributy['k'] = '6'  # kind, slovní druh, part of speech (POS)
         self.stupen = self.atributy.get('d')  # degree, stupeň
 
+    @staticmethod
+    def odtrhnout_koncovku(lemma):
+        # jen kvůli výjimkám
+        if lemma[-1] in ('e', 'ě'):
+            return lemma[:-1], lemma[-1]
+        elif lemma[-3:-1] in ('eji', 'ěji'):
+            return lemma[:-3], lemma[-3:-1]
+        else:
+            return lemma, ''
+
     def vytvorit_odvozeniny(self):
         return chain(
-            self.prefixace_sufixace(),
             self.stupnovani(),
+            self.prefixace_sufixace(),
         )
 
     # Jiné způsoby derivace než prefixaci a sufixaci neznáme

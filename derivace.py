@@ -18,14 +18,16 @@ def test():
         (Substantivum(lemma='břeh'), ['pobřeží', 'pobřežní', 'nábřeží']),
         (Substantivum(lemma='cesta'), ['scestí', 'rozcestí', 'rozcestník',
                                        'cestovat']),
-        (Substantivum(lemma='čelo'), ['průčelí', 'čelní']),
+        (Substantivum(lemma='čelo'), ['průčelí', 'čelní', 'náčelník']),
         (Adjektivum(lemma='český'), ['česky', 'češtější']),
         (Substantivum(lemma='četa'), ['četař', 'četník', 'četnický', 'četařka',
                                       'četnice']),
         # TODO: čtený → čtenář
         (Adjektivum(lemma='dlouhý'), ['delší', 'dloužit', 'prodloužit']),
         (Substantivum(lemma='doba'), ['období', 'dobový']),
-        (Adjektivum(lemma='dobrý'), ['dobře', 'udobřit', 'udobřený']),
+        (Adjektivum(lemma='dobrý'), ['dobře', 'udobřit', 'udobřený', 'lepší',
+                                     'lépe', 'líp', 'dobrota', 'dobrotivý',
+                                     'dobrotivec', 'dobrák']),
         (Adjektivum(lemma='drahý'), ['dražší', 'dráž', 'dražit', 'vydražit',
                                      'zdražit']),  # dráž?
         # do+vést?
@@ -41,7 +43,8 @@ def test():
             'hlavice']),
         (Adjektivum(lemma='hloupý'), ['hloupě', 'hloupější', 'hlupák',
                                       'hlupácký', 'prohloupit']),
-        (Adjektivum(lemma='hluchý'), ['hluše', 'hlušší', 'ohlušit']),
+        (Adjektivum(lemma='hluchý'), ['hluše', 'hlušší', 'ohlušit',
+                                      'zahlušit']),
         (Substantivum(lemma='hora'), ['horník', 'pohoří', 'podhůří', 'horský',
                                       'náhorní']),
         (Substantivum(lemma='houba'), ['houbař', 'podhoubí', 'houbařka',
@@ -67,6 +70,7 @@ def test():
         (Substantivum(lemma='led'), ['náledí', 'lední', 'ledový', 'ledovat']),
         (Substantivum(lemma='les'), ['podlesí', 'lesní', 'lesník',
                                      'lesnický']),
+        (Adjektivum(lemma='malý'), ['menší']),
         (Adjektivum(lemma='mělký'), ['mělčí', 'mělce']),
         (Substantivum(lemma='město'), ['náměstí', 'předměstí']),
         # TODO: nekrátit!
@@ -82,7 +86,7 @@ def test():
         (Substantivum(lemma='Olomouc'), ['olomoucký', 'olomoucky']),
         (Substantivum(lemma='Ostrava'), ['ostravský', 'ostravsky']),
         (Substantivum(lemma='pádlo'), ['pádlař', 'pádlařský', 'pádlovat']),
-        (Adjektivum(lemma='pěkný'), ['pěkně']),
+        (Adjektivum(lemma='pěkný'), ['pěkně', 'hezčí']),
         (Adjektivum(lemma='plachý'), ['plašší', 'plaše', 'plašit']),
         # pláč → plakat → uplakat → uplakaný (zas jen flexe)
         (Verbum(lemma='plakat', atributy=dict(e='A', a='I')), [
@@ -107,13 +111,17 @@ def test():
         # „posmutnělý“ ať už si vytvoří (m)ajka, to už je flexe a ne derivace
         (Adjektivum(lemma='smutný'), ['smutnější', 'smutnit', 'posmutnět']),
         (Adjektivum(lemma='stálý'), ['stálejší', 'stále']),
-        (Adjektivum(lemma='starý'), ['starší', 'staře', 'stařec', 'stařecký']),
+        (Adjektivum(lemma='starý'), ['starší', 'staře', 'stařec', 'stařecký',
+                                     'stařešina']),
         (Substantivum(lemma='stopa'), ['stopař', 'stopařův', 'stopařka',
                                        'stopový', 'stopařský', 'stopovat']),
         (Substantivum(lemma='střed'), ['prostředí', 'ústředí', 'středový',
                                        'střední']),
         (Substantivum(lemma='střecha'), ['přístřeší', 'střešní']),
-        (Adjektivum(lemma='suchý'), ['sušší', 'sušit', 'sušený', 'suše']),
+        (Adjektivum(lemma='suchý'), ['sušší', 'sušit', 'sušený', 'suše',
+                                     'dosušit', 'usušit', 'vysušit']),
+        # šíře, šířit
+        (Adjektivum(lemma='široký'), ['širší']),
         (Substantivum(lemma='škola'), ['školní', 'školník', 'školský']),
         (Adjektivum(lemma='špatný'), ['horší', 'špatnější']),
         (Adjektivum(lemma='tenký'), ['tenčí', 'tenčit', 'ztenčit']),
@@ -126,6 +134,9 @@ def test():
                                       'úřednický', 'úřadovat']),
         # úžit → úz-k-ý?
         (Adjektivum(lemma='úzký'), ['užší', 'úžit', 'zúžit']),
+        (Adjektivum(lemma='velký'), ['větší']),
+        (Adjektivum(lemma='veliký'), ['větší', 'velikost', 'velikán',
+                                      'zveličit']),
         (Adjektivum(lemma='veselý'), ['veselejší', 'veselice', 'veselit',
                                       'rozveselit', 'veselka']),
         (Substantivum(lemma='věta'), ['souvětí', 'větný']),
@@ -141,7 +152,7 @@ def test():
         (Substantivum(lemma='zeď'), ['zedník', 'zednický']),
         (Substantivum(lemma='zem'), ['podzemí', 'území', 'zemní']),
         (Substantivum(lemma='země'), ['zemský', 'zázemí']),
-        (Adjektivum(lemma='zlý'), ['horší', 'zlejší']),
+        (Adjektivum(lemma='zlý'), ['horší', 'zlejší', 'zle', 'hůře', 'hůř']),
         # znamen-í → znamen-it-ý (je -it- téma?)
         (Adjektivum(koren='znamen', sufix='it', koncovka='ý', atributy=dict(
             d='1')), ['znamenitější']),

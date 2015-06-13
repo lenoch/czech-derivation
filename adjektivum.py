@@ -19,10 +19,8 @@ class Adjektivum(slovni_tvar.SlovniTvar):
                          koncovka, nahradit_sufix)
 
         self.atributy['k'] = '2'  # kind, slovní druh, part of speech (POS)
-        self.stupen = self.atributy.get('d', '1')  # degree, stupeň
-        self.gradable = self.stupen in ('1', '2', '3')
-        if not self.gradable:
-            self.stupen = self.atributy['d'] = 'N'  # nestupňovatelné
+        self.stupen = self.atributy.get('d', '1')  # degree/grade
+        self.atributy['d'] = self.stupen
 
     @staticmethod
     def odtrhnout_koncovku(lemma):
@@ -48,7 +46,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
             return self.superlativ()
 
     def komparativ(self):
-        if not self.gradable:
+        if self.stupen == 'N':
             return
 
         vyjimka = NEPRAVIDELNE_KOMPARATIVY.get(self.lemma)
@@ -89,12 +87,12 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         if self.vyznamy.get('posesivum'):
             return
 
-        yield adverbium.Adverbium(self, koncovka='o')
-
         if self.lemma[-3:] in ('cký', 'ský'):
             yield adverbium.Adverbium(self, koncovka='y')
         elif self.koncovka in ('í', 'ý'):
             yield adverbium.Adverbium(self, koncovka='ě')
+
+        yield adverbium.Adverbium(self, koncovka='o')
 
     def lesnik(self):
         if self.lemma.endswith('ní') and not self.vyznamy.get('posesivum'):
@@ -115,7 +113,7 @@ class Adjektivum(slovni_tvar.SlovniTvar):
 
     def susit(self):
         # sloveso s významem „stávat se suchým“ (ale: plachý → plašit)
-        if not self.gradable:
+        if self.stupen == 'N':
             # adjektivní kořeny tuto vlastnost mají, odvozené často (?) ne, tak
             # toho prozatím využijeme
             return

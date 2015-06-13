@@ -3,7 +3,7 @@ from upravy import palatalizovat
 
 class SlovniTvar:
     def __init__(self, rodic=None, atributy={}, vyznamy={}, koren='',
-                 prefix='', sufix='', koncovka='', nahradit_sufix=None):
+                 prefix='', sufix='', koncovka=None, nahradit_sufix=None):
         """
         Slovní tvar se dá vytvořit od jiného a k tomu doplnit některé položky.
         """
@@ -27,7 +27,7 @@ class SlovniTvar:
             if sufix:
                 self.sufixy.append(sufix)
                 self.koncovka = ''
-            if koncovka:
+            if koncovka is not None:
                 self.koncovka = koncovka
 
             self.atributy.update(atributy)
