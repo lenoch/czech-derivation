@@ -1,5 +1,3 @@
-import transformace_hlasek
-
 # predpony
 # z, s, v, u, o,
 def z(slovo):
