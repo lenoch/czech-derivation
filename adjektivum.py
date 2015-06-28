@@ -90,9 +90,24 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         if self.lemma[-3:] in ('cký', 'ský'):
             yield adverbium.Adverbium(self, koncovka='y')
         elif self.koncovka in ('í', 'ý'):
-            yield adverbium.Adverbium(self, koncovka='ě')
+            yield adverbium.Adverbium(self, koncovka='ě')  # TODO: na-mál-e?
 
-        yield adverbium.Adverbium(self, koncovka='o')
+        # už odvozené tvary bych radši neadverbializoval, dělají to?
+        if self.prefixy or self.sufixy:
+            return
+
+        # spolu s předložkou ustrnulý jmenný tvar adjektiva, proto ta zvláštní
+        # pádová koncovka (díky za konzultaci patří Kláře Osolsobě)
+        yield adverbium.Adverbium(self, dict(d='N'), koncovka='o')  # málo
+        # nanovo
+        yield adverbium.Adverbium(self, dict(d='N'), prefix='na', koncovka='o')
+        # doběla
+        yield adverbium.Adverbium(self, dict(d='N'), prefix='do', koncovka='a')
+        # znova, zdola, (zezdola?), TODO: shora? (zeshora?)
+        prefix = 'ze' if self.lemma[0] in ('s', 'z') else 'z'
+        yield adverbium.Adverbium(self, dict(d='N'), prefix=prefix,
+                                  koncovka='a')
+        # TODO: namále?
 
     def lesnik(self):
         if self.lemma.endswith('ní') and not self.vyznamy.get('posesivum'):
@@ -123,7 +138,11 @@ class Adjektivum(slovni_tvar.SlovniTvar):
         if self.tema:
             return
 
+        # kry-t-a
         yield verbum.Verbum(self, dict(a='I'), tema='i', koncovka='t')
 
     # další: postaršit, zesmutnět, posmutnět
     # jiná témata: blb-nou-t
+    # *stolnější (ale víno)
+    # relační/kvalifikační
+    # pokojnější

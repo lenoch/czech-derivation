@@ -58,6 +58,7 @@ KRACENI = OrderedDict((
 ZKRATIT = re.compile('|'.join(grafemy for grafemy in KRACENI))
 
 
+# to jsou filtry (v řeči langusty)
 def palatalizovat(slovo):
     """
     Pokud subn najde např. „chě“ v „tichě“, zavolá pomocnou funkci, a ta mu za

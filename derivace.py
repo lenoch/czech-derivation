@@ -14,13 +14,15 @@ def test():
             anim=True)), ['autorův', 'autorský', 'autorka', 'autorčin']),
         (Adjektivum(lemma='blbý'), ['blbější', 'blbě', 'zblbnout']),
         (Substantivum(lemma='bok'), ['úbočí', 'boční', 'pobočník']),
+        # bos- je jmenný tvar adjektiva
         (Adjektivum(lemma='bosý'), ['bose', 'naboso', 'bos']),
         (Substantivum(lemma='břeh'), ['pobřeží', 'pobřežní', 'nábřeží']),
         (Substantivum(lemma='cesta'), ['scestí', 'rozcestí', 'rozcestník',
                                        'cestovat', 'cestovatel', 'cestovní']),
         (Substantivum(lemma='čelo'), ['průčelí', 'čelní', 'náčelník',
                                       'čelovka']),
-        (Adjektivum(lemma='český'), ['česky', 'češtější']),
+        # Čech > češský → český (neboli TODO: derivovat od Čecha výjimkou)
+        (Adjektivum(lemma='český'), ['česky', 'češtější', 'počeštit']),
         (Substantivum(lemma='četa'), ['četař', 'četník', 'četnický', 'četařka',
                                       'četnice']),
         # TODO: čtený → čtenář
@@ -51,7 +53,8 @@ def test():
                                       'náhorní']),
         (Substantivum(lemma='houba'), ['houbař', 'podhoubí', 'houbařka',
                                        'hubní', 'houbový', 'houbařský',
-                                       'houbařit']),  # TODO
+                                       'houbařit', 'hubník']),  # TODO
+        # cizí asi není (< houst?) – takže proč -ista?
         (Substantivum(lemma='housle', vyznamy=dict(cizi=True)), ['houslista',
                                                                  'houslový']),
         (Substantivum(lemma='hrad'), ['podhradí', 'předhradí', 'hradní',
@@ -77,7 +80,7 @@ def test():
                                      'ledovka']),
         (Substantivum(lemma='les'), ['podlesí', 'lesní', 'lesník',
                                      'lesnický']),
-        (Adjektivum(lemma='malý'), ['menší']),
+        (Adjektivum(lemma='malý'), ['menší', 'málo']),
         (Adjektivum(lemma='mělký'), ['mělčí', 'mělce', 'mělčina']),
         (Substantivum(lemma='město'), ['náměstí', 'předměstí', 'měšťan',
                                        'měštanský', 'měšťák']),
@@ -87,13 +90,20 @@ def test():
                                      'mládnout']),
         (Substantivum(lemma='moře'), ['úmoří', 'mořský', 'námořní', 'námořník',
                                       'námořnice', 'námořnický']),
+        # moucha/mucha → muší +zvíře
+        # hrouda/hruda
+        (Substantivum(lemma='moucha'), ['muší']),
         (Adjektivum(lemma='mrtvý'), ['mrtvě', 'domrtva', 'mrtvice',
                                      'umrtvit', 'mrtvola']),
         (Adjektivum(lemma='nahý'), ['donaha', 'obnažit', 'naháč']),
-        (Adjektivum(lemma='nový'), ['novější', 'obnovit', 'obnova']),
+        (Adjektivum(lemma='nový'), ['novější', 'obnovit', 'obnova', 'nanovo',
+                                    'znova']),
         (Substantivum(lemma='oko'), ['obočí', 'oční']),
         (Substantivum(lemma='Olomouc'), ['olomoucký', 'olomoucky']),
         (Substantivum(lemma='Ostrava'), ['ostravský', 'ostravsky']),
+        (Substantivum(lemma='pád'), ['padat', 'spád', 'západ', 'zapadat',
+                                     'padnout', 'padák', 'úpadek', 'nápad',
+                                     'dopad']),
         (Substantivum(lemma='pádlo'), ['pádlař', 'pádlařský', 'pádlovat']),
         (Adjektivum(lemma='pěkný'), ['pěkně', 'hezčí']),
         (Adjektivum(lemma='plachý'), ['plašší', 'plaše', 'plašit']),
