@@ -12,6 +12,7 @@ def test():
     pokusy = [
         (Substantivum(lemma='autor', atributy=dict(g='M'), vyznamy=dict(
             anim=True)), ['autorův', 'autorský', 'autorka', 'autorčin']),
+        # běh >> pro-bíh-a-t, prů-běh > prů-běž-n-ý
         (Adjektivum(lemma='blbý'), ['blbější', 'blbě', 'zblbnout']),
         (Substantivum(lemma='bok'), ['úbočí', 'boční', 'pobočník']),
         # bos- je jmenný tvar adjektiva
@@ -76,6 +77,7 @@ def test():
         # krát-i-t → krát-k-ý?
         (Adjektivum(lemma='krátký'), ['kratší', 'zkrátit', 'zkratka']),
         # krot-i-t → krot-k-ý
+        # po-kus, po-kouš-et, po-kuš-i-tel, z-kouš-k-a
         (Substantivum(lemma='led'), ['náledí', 'lední', 'ledový', 'ledovat',
                                      'ledovka']),
         (Substantivum(lemma='les'), ['podlesí', 'lesní', 'lesník',
