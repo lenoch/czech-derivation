@@ -40,7 +40,7 @@ Adjektiva
   Tady není úplně jasné, jestli by se od stupňovaných podob taky neměly tvořit
   odpovídající adverbia. Mělo by to jen jednu nevýhodu – když by se přesunulo
   všechno stupňování sem, nešlo by přímo derivovat od adverbií. Jenže – existují
-  vůbec doklady (NAJÍT!), že by se stupňovala adverbia, která nemají svůj vzor
+  vůbec doklady (Dle korpusu SYN2010 a vlastního porovnávacího kódu - mohu dodat data - bylo zjištěno, že dochází pouze k nepravidelnostem například u slov: raději - rád, dál, dále, déle, šíř, šíře. Asi jediné, co opravdu není od adjektiva je "dříve" a "dýl". Porovnávala jsem 3438 adjektiv v druhém stupni a prvním pádě a přes 67 tisíc lemmat adjektiv s přes 1600 adverbií v druhém stupni.), že by se stupňovala adverbia, která nemají svůj vzor
   v adjektivu? Pak by to bylo jasné, mohl bych to bez obav přesunout, protože
   v programu vždycky jdu jen směrem od fundujících slov k odvozený a stupňování
   adverbií to vlastně trochu kazí.
